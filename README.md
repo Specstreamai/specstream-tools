@@ -1,15 +1,21 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/specstream-mark-white.svg">
-    <img src="assets/specstream-mark.svg" alt="SpecStream" width="96">
-  </picture>
+  <a href="https://specstream.ai">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="assets/readme-banner-night.png">
+      <img src="assets/readme-banner-day.png" alt="SpecStream" width="100%">
+    </picture>
+  </a>
 </p>
 
-# SpecStream
+<h3 align="center">The live web data engine for teams and agents.</h3>
 
-Finished lists from the live web for your agent, every row with its source, priced before anything runs.
+<p align="center">
+  <a href="https://specstream.ai">Website</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://specstream.ai/docs/mcp">Docs</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://specstream.ai/pricing">Pricing</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://registry.modelcontextprotocol.io/v0.1/servers?search=ai.specstream">MCP Registry</a>
+</p>
 
-SpecStream is the live web data engine for teams and agents. Ask for the list you need in plain words and get all of it from the live web: only the matches, each with the page it came from, kept current and sent where you work. You pay only for the matches.
+<br>
+
+Finished lists from the live web for your agent, every row with its source, priced before anything runs. Ask for the list you need in plain words and get all of it: only the matches, each with the page it came from, kept current and sent where you work. You pay only for the matches.
 
 Your agent asks for "food banks in Texas, with their annual revenue" and gets rows it can cite, each with the page behind it. It sees the price first, and a search that finds nothing costs nothing.
 
