@@ -1,0 +1,63 @@
+{
+  "name": "n8n-nodes-specstream",
+  "version": "1.0.0",
+  "description": "SpecStream for n8n: ask for a list in plain words and pass every match, with its source, to the next node. Priced before it runs.",
+  "license": "MIT",
+  "homepage": "https://specstream.ai/docs/integrations",
+  "keywords": [
+    "n8n-community-node-package",
+    "specstream",
+    "web-data",
+    "live-web",
+    "lead-lists",
+    "enrichment",
+    "monitoring",
+    "mcp"
+  ],
+  "author": {
+    "name": "SpecStream",
+    "email": "support@specstream.ai"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Specstreamai/specstream-tools.git",
+    "directory": "integrations/n8n"
+  },
+  "bugs": {
+    "url": "https://github.com/Specstreamai/specstream-tools/issues"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "test": "node test/confirm_max_usd.test.js",
+    "prepublishOnly": "n8n-node prerelease",
+    "release": "n8n-node release"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [
+      "dist/credentials/SpecstreamApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Specstream/Specstream.node.js",
+      "dist/nodes/Specstream/SpecstreamTrigger.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "0.51.3",
+    "eslint": "9.32.0",
+    "prettier": "3.6.2",
+    "release-it": "^21.1.0",
+    "typescript": "5.9.2"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}

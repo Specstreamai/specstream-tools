@@ -1,0 +1,202 @@
+{
+  "name": "specstream",
+  "displayName": "SpecStream",
+  "description": "Give your agent finished lists from the live web. One plain-English request returns every match, each with its source.",
+  "version": "0.1.0",
+  "publisher": "specstream",
+  "license": "MIT",
+  "homepage": "https://specstream.ai",
+  "bugs": {
+    "email": "support@specstream.ai"
+  },
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#1E2F46",
+    "theme": "dark"
+  },
+  "categories": [
+    "AI",
+    "Chat"
+  ],
+  "keywords": [
+    "mcp",
+    "specstream",
+    "lead list",
+    "web data",
+    "agent",
+    "chat participant",
+    "live web"
+  ],
+  "engines": {
+    "vscode": "^1.101.0"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": true
+  },
+  "contributes": {
+    "mcpServerDefinitionProviders": [
+      {
+        "id": "specstream.mcp",
+        "label": "SpecStream"
+      }
+    ],
+    "chatParticipants": [
+      {
+        "id": "specstream.chat",
+        "name": "specstream",
+        "fullName": "SpecStream",
+        "description": "Ask for the list no one sells. See the price, approve it, get every match with its source.",
+        "isSticky": false,
+        "commands": [
+          {
+            "name": "find",
+            "description": "Describe the list you need. You see the price before anything runs."
+          },
+          {
+            "name": "approve",
+            "description": "Run the list at the price you were shown."
+          }
+        ],
+        "disambiguation": [
+          {
+            "category": "specstream_lists",
+            "description": "The user wants a list of companies, tenders, grants, repositories, filings or other things found on the live web, with a source for each row.",
+            "examples": [
+              "Companies that filed a Form D this week to raise $5M or more, with state and industry",
+              "MCP servers on GitHub with more than 500 stars, pushed this month"
+            ]
+          }
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "specstream.connect",
+        "title": "Connect",
+        "category": "SpecStream"
+      },
+      {
+        "command": "specstream.askForList",
+        "title": "Ask for a List",
+        "category": "SpecStream"
+      },
+      {
+        "command": "specstream.openList",
+        "title": "Open List in Workspace",
+        "category": "SpecStream"
+      },
+      {
+        "command": "specstream.setApiKey",
+        "title": "Use an API Key Instead of Signing In",
+        "category": "SpecStream"
+      },
+      {
+        "command": "specstream.clearApiKey",
+        "title": "Remove Stored API Key",
+        "category": "SpecStream"
+      },
+      {
+        "command": "specstream.approve",
+        "title": "Approve and Run List",
+        "category": "SpecStream"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "specstream.approve",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "SpecStream",
+      "properties": {
+        "specstream.maxMatches": {
+          "type": "integer",
+          "default": 25,
+          "minimum": 1,
+          "maximum": 10000,
+          "markdownDescription": "How many matches `@specstream /find` asks for. The price you approve is for at most this many."
+        },
+        "specstream.serverUrl": {
+          "type": "string",
+          "default": "https://api.specstream.ai/mcp",
+          "markdownDescription": "The SpecStream MCP server address. Leave as is unless support asks you to change it."
+        },
+        "specstream.workspaceUrl": {
+          "type": "string",
+          "default": "https://specstream.ai",
+          "markdownDescription": "Where **Open in workspace** goes."
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "specstream.start",
+        "title": "Get your first list with SpecStream",
+        "description": "Connect, ask for a list in plain words, and open it in the workspace.",
+        "steps": [
+          {
+            "id": "connect",
+            "title": "Connect SpecStream",
+            "description": "Sign in once. VS Code keeps you signed in and adds SpecStream to agent mode too.\n[Connect](command:specstream.connect)",
+            "media": {
+              "markdown": "media/walkthrough/connect.md"
+            },
+            "completionEvents": [
+              "onCommand:specstream.connect"
+            ]
+          },
+          {
+            "id": "ask",
+            "title": "Ask for a list",
+            "description": "Describe the list in your own words. You see the price first, and nothing runs until you approve it.\n[Ask for a list](command:specstream.askForList)",
+            "media": {
+              "markdown": "media/walkthrough/ask.md"
+            },
+            "completionEvents": [
+              "onCommand:specstream.askForList"
+            ]
+          },
+          {
+            "id": "open",
+            "title": "Open it in the workspace",
+            "description": "Every match sits in your workspace with the page behind each fact, ready to send to your sheet, CRM or agent.\n[Open workspace](command:specstream.openList)",
+            "media": {
+              "markdown": "media/walkthrough/open.md"
+            },
+            "completionEvents": [
+              "onCommand:specstream.openList"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Specstreamai/specstream-tools.git",
+    "directory": "integrations/vscode"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "npm run typecheck && node esbuild.mjs",
+    "package": "vsce package",
+    "vscode:prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/vscode": "1.101.0",
+    "@vscode/vsce": "3.6.0",
+    "esbuild": "0.25.5",
+    "typescript": "5.9.3"
+  }
+}

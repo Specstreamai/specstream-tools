@@ -1,0 +1,119 @@
+{
+  "name": "SpecStream: send selected results to Salesforce or Pipedrive",
+  "active": false,
+  "meta": {
+    "gallery": false,
+    "sequencer": false,
+    "write_back_mode": "export-only"
+  },
+  "nodes": [
+    {
+      "id": "trigger",
+      "name": "Request finished",
+      "type": "n8n-nodes-specstream.specstreamTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "status",
+      "name": "Get Status",
+      "type": "n8n-nodes-specstream.specstream",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "operation": "getStatus",
+        "find_id": "={{$json.find_id}}"
+      }
+    },
+    {
+      "id": "rows",
+      "name": "Get results",
+      "type": "n8n-nodes-specstream.specstream",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "operation": "getMatchingRows",
+        "find_id": "={{$json.find_id}}"
+      }
+    },
+    {
+      "id": "salesforce",
+      "name": "Send to Salesforce",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [
+        680,
+        -80
+      ],
+      "parameters": {
+        "operation": "create",
+        "export_only": true
+      },
+      "notes": "Creates the records and stops there."
+    },
+    {
+      "id": "pipedrive",
+      "name": "Send to Pipedrive",
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        680,
+        80
+      ],
+      "parameters": {
+        "operation": "create",
+        "export_only": true
+      }
+    }
+  ],
+  "connections": {
+    "Request finished": {
+      "main": [
+        [
+          {
+            "node": "Get Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Status": {
+      "main": [
+        [
+          {
+            "node": "Get results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get results": {
+      "main": [
+        [
+          {
+            "node": "Send to Salesforce",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send to Pipedrive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

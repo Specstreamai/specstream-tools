@@ -1,0 +1,57 @@
+name: SpecStream Find
+description: >
+  Describe a list in plain words, check the price against a maximum you set, run it,
+  and upload the results as a CSV. Nothing runs without confirm_max_usd.
+author: SpecStream
+inputs:
+  request:
+    description: What you need, in your own words
+    required: true
+  api_key:
+    description: SpecStream API key (ss_live_ or ss_test_). Keep it in a repository secret.
+    required: true
+  confirm_max_usd:
+    description: The most this step may spend, in US dollars. The step stops if the price is higher, and it never fills this in for you.
+    required: true
+  idempotency_key:
+    description: Stable identity for this run. Defaults to the workflow run ID and job, so a re-run picks up the same work and never pays twice.
+    required: false
+  base_url:
+    description: API origin
+    required: false
+    default: https://api.specstream.ai
+  locale:
+    description: Language and region of the request
+    required: false
+    default: en-US
+outputs:
+  find_id:
+    description: ID of the run, for the SpecStream workspace and API
+    value: ${{ steps.find.outputs.find_id }}
+  csv_path:
+    description: Path to the results CSV
+    value: ${{ steps.find.outputs.csv_path }}
+runs:
+  using: composite
+  steps:
+    - name: read, price, run
+      id: find
+      shell: bash
+      env:
+        INPUT_REQUEST: ${{ inputs.request }}
+        INPUT_API_KEY: ${{ inputs.api_key }}
+        INPUT_CONFIRM_MAX_USD: ${{ inputs.confirm_max_usd }}
+        INPUT_IDEMPOTENCY_KEY: ${{ inputs.idempotency_key }}
+        INPUT_BASE_URL: ${{ inputs.base_url }}
+        INPUT_LOCALE: ${{ inputs.locale }}
+      run: python3 "${GITHUB_ACTION_PATH}/run.py"
+    - name: upload CSV
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: specstream-results
+        path: ${{ steps.find.outputs.csv_path }}
+        if-no-files-found: error
+branding:
+  icon: search
+  color: orange

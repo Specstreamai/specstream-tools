@@ -1,0 +1,88 @@
+{
+  "name": "SpecStream: review a request, approve the quote, and get results",
+  "active": false,
+  "meta": {
+    "gallery": false,
+    "sequencer": false,
+    "approval": "Inspect the price, then provide the maximum you approve in user_approved_maximum_usd and one request key in stable_execution_key. Wait until the run has finished before getting results. This template never approves work on its own and never exports an unfinished run."
+  },
+  "nodes": [
+    {
+      "id": "compile",
+      "name": "Read the request",
+      "type": "n8n-nodes-specstream.specstream",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "operation": "compile",
+        "q": "={{$json.request}}",
+        "locale": "en-US"
+      }
+    },
+    {
+      "id": "quote",
+      "name": "Review scope and price",
+      "type": "n8n-nodes-specstream.specstream",
+      "typeVersion": 1,
+      "position": [
+        260,
+        0
+      ],
+      "parameters": {
+        "operation": "quoteWork",
+        "ast_hash": "={{$json.ast_hash}}",
+        "requested_units": "={{$json.ast.limit.max}}",
+        "work_operation": "find",
+        "parent_find_id": "",
+        "project_id": ""
+      }
+    },
+    {
+      "id": "run",
+      "name": "Approve the price",
+      "type": "n8n-nodes-specstream.specstream",
+      "typeVersion": 1,
+      "position": [
+        260,
+        0
+      ],
+      "parameters": {
+        "operation": "confirmAndRun",
+        "quote_id": "={{$json.quote_id}}",
+        "quote_hash": "={{$json.quote_hash}}",
+        "confirm_max_usd": "={{$json.user_approved_maximum_usd}}",
+        "idempotency_key": "={{$json.stable_execution_key}}"
+      }
+    },
+    {
+      "id": "rows",
+      "name": "Get results",
+      "type": "n8n-nodes-specstream.specstream",
+      "typeVersion": 1,
+      "position": [
+        520,
+        0
+      ],
+      "parameters": {
+        "operation": "getMatchingRows",
+        "find_id": "={{$json.find_id}}"
+      }
+    }
+  ],
+  "connections": {
+    "Read the request": {
+      "main": [
+        [
+          {
+            "node": "Review scope and price",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

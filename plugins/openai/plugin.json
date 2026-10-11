@@ -1,0 +1,106 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "specstream",
+  "version": "1.2.0",
+  "description": "The live web data engine for teams and agents. Ask for a list in plain words and get rows that match what you asked, each with the page it came from.",
+  "author": {
+    "name": "SpecStream SAS",
+    "email": "support@specstream.ai",
+    "url": "https://specstream.ai"
+  },
+  "homepage": "https://specstream.ai/docs/mcp",
+  "keywords": [
+    "web data",
+    "lists",
+    "research",
+    "public records",
+    "local businesses",
+    "mcp"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "SpecStream",
+        "shortDescription": "Any list, from the live web",
+        "longDescription": "SpecStream builds data lists from the live web. Describe the list you need in plain words: companies, local businesses, tenders, datasets, repositories or public records. SpecStream reads live pages and official sources when you ask and returns structured rows that meet your conditions, with the page behind each fact.\n\nOpen any row to see why it matched, the quote that supports it and the page it came from. Candidates SpecStream couldn't confirm are shown apart, labeled as possible, and never counted as results.\n\nAsk in your own words, in any language. Try roofing contractors in Columbus rated 4.5 or better with fewer than 20 Google reviews, datasets on urban tree canopy under an open license, or Texas food banks with annual revenue from Form 990.\n\nThe Lists app shows your recent lists and fills in rows as they're found. Download a list as CSV, Excel, JSON, HTML, KML or GeoJSON from the conversation, or share it with a link.\n\nYou approve each run before it starts, and you can stop it at any time.",
+        "developerName": "SpecStream SAS",
+        "category": "Data & Analytics",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://specstream.ai",
+        "supportURL": "https://specstream.ai/talk-to-a-human",
+        "privacyPolicyURL": "https://specstream.ai/privacy",
+        "termsOfServiceURL": "https://specstream.ai/terms",
+        "defaultPrompt": [
+          "Use SpecStream to find roofing contractors in Columbus, Ohio rated 4.5 or better with fewer than 20 Google reviews.",
+          "Use SpecStream to find datasets on urban tree canopy published since 2020 under an open license.",
+          "Use SpecStream to find food banks in Texas, with their annual revenue."
+        ],
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/icon.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Understands a request and shows the reading before anything runs or costs money.",
+              "prompt": "Find dental practices in Florida with three or more locations. Leave out practices owned by a dental service organization.",
+              "tools_triggered": "compile",
+              "expected_behavior": "Shows what SpecStream will look for (dental practices in Florida), the conditions (three or more locations, not owned by a dental service organization) and the facts to bring back. Says nothing has run or been charged, and offers to get a price."
+            },
+            {
+              "description": "Gets a price for a request and asks for approval without starting work.",
+              "prompt": "How much would it cost to find 25 open tenders on SAM.gov for translation services with a deadline after November 1, including the buyer and the estimated value?",
+              "tools_triggered": "compile, quote_new_list",
+              "expected_behavior": "Shows the price: the most the work can cost, the per-result rate and when the price expires. Asks the user to approve before anything runs. run_new_list is not called."
+            },
+            {
+              "description": "Runs a request within a ceiling the user set, follows the run and shows sourced results.",
+              "prompt": "Find 10 food banks in Texas with their annual revenue. Get a price and run it if it's $5 or less.",
+              "tools_triggered": "compile, quote_new_list, run_new_list, get_find, list_find_rows, show_specstream_records",
+              "expected_behavior": "Gets a price. If the price ceiling is at most $5, runs it with run_new_list and confirm_max_cents no higher than 500, follows progress until the run finishes, and lists the food banks with their annual revenue and the source behind each fact. If the price is above $5, asks before running."
+            },
+            {
+              "description": "Downloads results from a run in the same conversation.",
+              "prompt": "Find datasets on urban tree canopy published since 2020 under an open license. Run it if the price is $5 or less, then give me a CSV of the results.",
+              "tools_triggered": "compile, quote_new_list, run_new_list, get_find, list_find_rows, export_find",
+              "expected_behavior": "Runs the request within the $5 ceiling, lists the datasets with their sources, and returns a CSV download link."
+            },
+            {
+              "description": "Reads the user's projects and balance without spending.",
+              "prompt": "Which SpecStream projects can I use, and how much balance do I have left?",
+              "tools_triggered": "list_projects, get_capacity_balance",
+              "expected_behavior": "Lists the projects with the user's role in each and shows the available balance. Nothing is quoted, approved or charged."
+            }
+          ],
+          "negative": [
+            {
+              "description": "A writing task about businesses SpecStream could find, with no list asked for.",
+              "prompt": "Write a short cold email I can send to roofing contractors in Columbus, Ohio.",
+              "expected_behavior": "ChatGPT writes the email itself. No SpecStream tool is called, because the user asked for an email, not a list."
+            },
+            {
+              "description": "A single fact, not a list.",
+              "prompt": "What's the population of Austin, Texas?",
+              "expected_behavior": "Answers directly or with ChatGPT's own search. No SpecStream tool is called, because SpecStream builds lists."
+            },
+            {
+              "description": "Account changes that stay in the owner's SpecStream workspace.",
+              "prompt": "Delete my SpecStream account and create a new API key for me.",
+              "expected_behavior": "Explains that closing the account and creating API keys happen in the SpecStream workspace settings, and calls no tool. These tools are not available to ChatGPT."
+            }
+          ]
+        },
+        "commerce": true,
+        "commerce_description": "SpecStream reads the live web for a request and checks each result against the user's conditions. Work is paid from the user's own SpecStream account balance, which the user manages on specstream.ai. The plugin never shows plans, prices to buy, upgrade prompts or checkout links, and it sells no credits. Before any paid run the user sees a quote and approves a maximum in the conversation, and ChatGPT asks for confirmation because the approval tool is marked destructive. Spending stops at the approved maximum and at the account's own limit.",
+        "demo_recording_url": "https://drive.google.com/file/d/1mIt4o3o5F54OuuGOiD34x9Lw-nAX0wZx/view?usp=sharing"
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md",
+      "publication": {
+        "release_notes": "Version 1.2.0. First release. Ask for a list in plain words, see how it was read, get a quote and approve it, then read results that meet every condition, each with the page behind each fact. Possible matches are shown apart and never counted. Download results as CSV, Excel, JSON or HTML. The Lists app opens from the sidebar and beside a conversation, opens CSV, Excel, GeoJSON and KML files, offers your lists as mentions and keeps its settings in ChatGPT. When a place matches several, ChatGPT asks which one in a form. Events tell a chat when a list finishes or a saved request finds new results. Includes five skills, with get-started as the setup skill."
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+# Publishes the n8n community node to npm with a provenance statement.
+#
+# n8n only verifies community nodes that are published from GitHub Actions with
+# provenance. The workflow file must be named publish.yml if you set up an npm
+# Trusted Publisher; otherwise set the NPM_TOKEN repository secret (a granular
+# access token with read and write on n8n-nodes-specstream).
+#
+# Run it from the Actions tab, or:  gh workflow run publish.yml
+name: publish
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "n8n-v*"
+
+jobs:
+  n8n:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: integrations/n8n
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test
+      - name: Publish with provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RELEASE_MODE: "true"
+          NPM_CONFIG_PROVENANCE: "true"
+        run: npm publish --access public

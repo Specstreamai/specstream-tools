@@ -1,0 +1,5 @@
+langchain>=1.0
+langchain-mcp-adapters>=0.2
+# Plus the integration for your model provider, for example:
+# langchain-openai
+# langchain-anthropic

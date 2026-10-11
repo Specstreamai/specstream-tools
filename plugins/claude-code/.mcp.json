@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "specstream": {
+      "type": "http",
+      "url": "https://api.specstream.ai/mcp",
+      "headers": {
+        "Authorization": "Bearer ${SPECSTREAM_API_KEY}"
+      }
+    }
+  }
+}

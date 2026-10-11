@@ -1,0 +1,343 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/specstream-mark-white.svg">
+    <img src="assets/specstream-mark.svg" alt="SpecStream" width="96">
+  </picture>
+</p>
+
+# SpecStream
+
+Finished lists from the live web for your agent, every row with its source, priced before anything runs.
+
+SpecStream is the live web data engine for teams and agents. Ask for the list you need in plain words and get all of it from the live web: only the matches, each with the page it came from, kept current and sent where you work. You pay only for the matches.
+
+Your agent asks for "food banks in Texas, with their annual revenue" and gets rows it can cite, each with the page behind it. It sees the price first, and a search that finds nothing costs nothing.
+
+![A request, its price, and a list ready to use](assets/readme-demo.gif)
+
+<!-- Registry badges, to switch on after the first publish. Replace <id> with the id each registry shows.
+[![PyPI](https://img.shields.io/pypi/v/specstream-client)](https://pypi.org/project/specstream-client/)
+[![npm](https://img.shields.io/npm/v/@specstream/sdk)](https://www.npmjs.com/package/@specstream/sdk)
+[![n8n node](https://img.shields.io/npm/v/n8n-nodes-specstream?label=n8n%20node)](https://www.npmjs.com/package/n8n-nodes-specstream)
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-ai.specstream%2Fspecstream-blue)](https://registry.modelcontextprotocol.io/v0.1/servers?search=ai.specstream)
+[![Glama](https://glama.ai/mcp/servers/<id>/badge)](https://glama.ai/mcp/servers/<id>)
+[![Smithery](https://smithery.ai/badge/<namespace>/<server>)](https://smithery.ai/servers/<namespace>/<server>)
+-->
+
+This repository holds what you install around SpecStream: MCP client setup, agent plugins and skills, SDKs, the n8n node, a GitHub Action, and examples. The product itself runs at [specstream.ai](https://specstream.ai). Licensed MIT.
+
+| Path | What it is |
+| --- | --- |
+| [`server.json`](server.json) | Entry for the official MCP Registry, `ai.specstream/specstream` |
+| [`skills/`](skills) | Agent skills: `compile`, `review-work`, `approve-work`, `continue-work` |
+| [`plugins/claude-code/`](plugins/claude-code) | Claude Code plugin (MCP server and the four skills) |
+| [`plugins/github-agent/`](plugins/github-agent) | Plugin for agents that read the agent-plugins format |
+| [`.cursor-plugin/`](.cursor-plugin) | Cursor plugin |
+| [`packages/sdk-py/`](packages/sdk-py) | `specstream-client`: Python client and the `specstream` command |
+| [`packages/sdk-ts/`](packages/sdk-ts) | `@specstream/sdk`: TypeScript client |
+| [`packages/mcp-stdio/`](packages/mcp-stdio) | `specstream-mcp-stdio`: stdio proxy for clients that only start local servers |
+| [`integrations/n8n/`](integrations/n8n) | `n8n-nodes-specstream`: n8n community node |
+| [`integrations/vscode/`](integrations/vscode) | VS Code extension: MCP sign-in and `@specstream` chat |
+| [`actions/find-action/`](actions/find-action) | GitHub Action that runs a request and uploads a CSV |
+| [`Formula/`](Formula) | Homebrew formula for the command line |
+| [`examples/`](examples) | Python SDK, TypeScript SDK, OpenAI Agents SDK and LangChain |
+
+## Connect an agent
+
+The MCP server is `https://api.specstream.ai/mcp` (Streamable HTTP, 96 tools). Your agent works on your account: the same balance, permissions and spending limits you have.
+
+1. Open **Agents & API** in the [workspace](https://specstream.ai/workspace) and create an API key. Give it only what the task needs: read, prepare, or execute, the projects it may use, an expiry, and a spending limit.
+2. Put it in an environment variable, so no file holds it:
+
+   ```sh
+   export SPECSTREAM_API_KEY="ss_live_..."
+   ```
+3. Add the server to your client, below.
+
+Clients that support MCP sign-in can connect without a key. Each guide at [specstream.ai/docs/mcp](https://specstream.ai/docs/mcp) shows the current steps.
+
+New accounts start with $10 of work free for 30 days, no card.
+
+### Claude
+
+In Claude, go to **Customize > Connectors**, choose **Add custom connector**, name it SpecStream and paste `https://api.specstream.ai/mcp`. Steps for both sign-in and a key: [docs/mcp/claude](https://specstream.ai/docs/mcp/claude).
+
+### Claude Code
+
+```sh
+claude mcp add --transport http specstream https://api.specstream.ai/mcp \
+  --header "Authorization: Bearer $SPECSTREAM_API_KEY"
+```
+
+Or install the plugin, which adds the server and the four skills:
+
+```sh
+/plugin marketplace add Specstreamai/specstream-tools
+/plugin install specstream@specstream
+```
+
+### ChatGPT
+
+Go to [ChatGPT Plugins](https://chatgpt.com/plugins), choose the plus button, then **Add custom MCP server**. Paste `https://api.specstream.ai/mcp` under **Connection** and set **Authentication** to **OAuth**. Steps: [docs/mcp/chatgpt](https://specstream.ai/docs/mcp/chatgpt).
+
+### Codex
+
+Add to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.specstream]
+url = "https://api.specstream.ai/mcp"
+bearer_token_env_var = "SPECSTREAM_API_KEY"
+```
+
+### Cursor
+
+Add to `~/.cursor/mcp.json`, or `.cursor/mcp.json` in one project:
+
+```json
+{
+  "mcpServers": {
+    "specstream": {
+      "url": "https://api.specstream.ai/mcp",
+      "headers": { "Authorization": "Bearer ${env:SPECSTREAM_API_KEY}" }
+    }
+  }
+}
+```
+
+### VS Code
+
+Add to `.vscode/mcp.json`. VS Code asks for the key once and keeps it out of the file.
+
+```json
+{
+  "inputs": [
+    { "type": "promptString", "id": "specstream-key", "description": "SpecStream API key", "password": true }
+  ],
+  "servers": {
+    "specstream": {
+      "type": "http",
+      "url": "https://api.specstream.ai/mcp",
+      "headers": { "Authorization": "Bearer ${input:specstream-key}" }
+    }
+  }
+}
+```
+
+### Windsurf
+
+Add to `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "specstream": {
+      "serverUrl": "https://api.specstream.ai/mcp",
+      "headers": { "Authorization": "Bearer ${env:SPECSTREAM_API_KEY}" }
+    }
+  }
+}
+```
+
+### Zed, Cline, and Continue
+
+These start a local server, so use the stdio proxy. It forwards your key from the environment and nothing else.
+
+```sh
+pip install specstream-mcp-stdio
+```
+
+Zed, in `settings.json`:
+
+```json
+{
+  "context_servers": {
+    "specstream": {
+      "command": "specstream-mcp-stdio",
+      "args": [],
+      "env": { "SPECSTREAM_MCP_URL": "https://api.specstream.ai/mcp" }
+    }
+  }
+}
+```
+
+Cline, in `cline_mcp_settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "specstream": {
+      "command": "specstream-mcp-stdio",
+      "args": [],
+      "env": { "SPECSTREAM_MCP_URL": "https://api.specstream.ai/mcp" }
+    }
+  }
+}
+```
+
+Continue, in `.continue/mcpServers/specstream.yaml`:
+
+```yaml
+name: SpecStream
+version: 1.0.0
+schema: v1
+mcpServers:
+  - name: specstream
+    type: stdio
+    command: specstream-mcp-stdio
+    args: []
+    env:
+      SPECSTREAM_MCP_URL: https://api.specstream.ai/mcp
+      SPECSTREAM_API_KEY: ${{ secrets.SPECSTREAM_API_KEY }}
+```
+
+Start Zed and Cline from a shell where `SPECSTREAM_API_KEY` is set.
+
+### Gemini CLI
+
+```sh
+gemini mcp add --transport http specstream https://api.specstream.ai/mcp \
+  --header "Authorization: Bearer $SPECSTREAM_API_KEY"
+```
+
+Or in `~/.gemini/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "specstream": {
+      "httpUrl": "https://api.specstream.ai/mcp",
+      "headers": { "Authorization": "Bearer $SPECSTREAM_API_KEY" }
+    }
+  }
+}
+```
+
+### n8n
+
+Install the community node from **Settings > Community nodes**: `n8n-nodes-specstream`. It reads a request, shows the quote, approves the maximum you type in, and returns the results. Three importable workflows are in [`integrations/n8n/workflows`](integrations/n8n/workflows). An AI agent in n8n can also use the **MCP Client Tool** node with endpoint `https://api.specstream.ai/mcp`, transport HTTP Streamable and a Bearer credential.
+
+### LangChain
+
+```python
+import os
+from langchain_mcp_adapters.client import MultiServerMCPClient
+
+client = MultiServerMCPClient({
+    "specstream": {
+        "transport": "streamable_http",
+        "url": "https://api.specstream.ai/mcp",
+        "headers": {"Authorization": f"Bearer {os.environ['SPECSTREAM_API_KEY']}"},
+    }
+})
+tools = await client.get_tools()
+```
+
+A full agent is in [`examples/langchain-mcp`](examples/langchain-mcp).
+
+### OpenAI Agents SDK
+
+```python
+import os
+from agents import Agent, Runner
+from agents.mcp import MCPServerStreamableHttp
+
+async with MCPServerStreamableHttp(
+    name="SpecStream",
+    params={
+        "url": "https://api.specstream.ai/mcp",
+        "headers": {"Authorization": f"Bearer {os.environ['SPECSTREAM_API_KEY']}"},
+    },
+    cache_tools_list=True,
+) as server:
+    agent = Agent(name="Researcher", instructions="Use SpecStream for lists.", mcp_servers=[server])
+    result = await Runner.run(agent, "Food banks in Texas, with their annual revenue. Show me the price first.")
+```
+
+A full agent is in [`examples/openai-agents-sdk`](examples/openai-agents-sdk).
+
+Any other client that speaks remote MCP over Streamable HTTP works with the address above and an `Authorization: Bearer` header.
+
+## What the agent does, in order
+
+Nothing is spent until a person – or an agent inside a limit a person set – approves a price.
+
+1. `compile` reads the request and returns how SpecStream understood it: the kind of thing, the conditions every result must meet, the facts to bring back.
+2. `quote_capacity_work` returns the price and the most the work can cost. A price lasts 30 minutes.
+3. `authorize_capacity_work` approves that exact quote, with the maximum in cents (`confirm_max_cents`) and a stable `idempotency_key`, so a retry never pays twice.
+4. `get_find` shows progress while rows arrive. `list_find_rows` returns results with the reason and the source for each fact.
+5. `export_find`, `share_find`, and `send_to_destination` move results on. Reading, exporting, and sharing cost nothing.
+
+Each delivered result costs 10 cents, 30 cents or $1 depending on how many facts it carries. A search that finds nothing is free. See [pricing](https://specstream.ai/pricing).
+
+The four skills in [`skills/`](skills) teach an agent this order and where to stop and ask: `compile`, `review-work`, `approve-work`, `continue-work`.
+
+## SDKs and command line
+
+```sh
+pip install specstream-client        # Python 3.12+, import specstream_client, command: specstream
+npm install @specstream/sdk          # Node 22+
+brew tap specstreamai/specstream-tools https://github.com/Specstreamai/specstream-tools
+brew install specstream              # the command line
+```
+
+```python
+import os
+from specstream_client import Client
+
+client = Client(os.environ["SPECSTREAM_API_KEY"])
+read = client.compile("Datasets on urban tree canopy published since 2020 under an open license.")
+offer = client.quote_capacity_work({
+    "ast_hash": read["ast_hash"], "operation": "find",
+    "requested_units": read["ast"]["limit"]["max"],
+})
+print(offer["maximum_cents"], offer["expires_at"])
+```
+
+```ts
+import { Client } from "@specstream/sdk";
+
+const client = new Client({ apiKey: process.env.SPECSTREAM_API_KEY! });
+const read = await client.compile("Datasets on urban tree canopy published since 2020 under an open license.");
+```
+
+Working scripts that run a request end to end are in [`examples/python-sdk`](examples/python-sdk) and [`examples/typescript-sdk`](examples/typescript-sdk).
+
+### GitHub Action
+
+```yaml
+- uses: Specstreamai/specstream-tools/actions/find-action@v1
+  with:
+    request: Open tenders on SAM.gov for translation services with a deadline after November 1. Include the buyer and the estimated value.
+    api_key: ${{ secrets.SPECSTREAM_API_KEY }}
+    confirm_max_usd: "10"
+```
+
+The step stops if the price is above `confirm_max_usd`.
+
+## Three requests
+
+Say what you need the way you would to a colleague. These come from the request templates in the product.
+
+**Software companies in Germany with 50 to 500 employees that are hiring salespeople. Include the job post and contact email.**
+One row per company, with its size, the sales job post and the contact email the company published. Each row says in one line why it fits, with the page each fact came from. Companies SpecStream could not confirm are listed apart, and they cost nothing.
+
+**Open tenders on SAM.gov for translation services with a deadline after November 1. Include the buyer and the estimated value.**
+One row per notice, with the buyer, the estimated value, the deadline and a link to the notice. Code compares the deadline with the date you gave.
+
+**Rust command-line tools on GitHub with more than 1,000 stars, pushed to in the last month, under an MIT or Apache license.**
+One row per repository, with its stars, last push and license. Code compares the stars and the date with your numbers, and each row links to the repository.
+
+Reading goes where those things live: registries and official APIs, maps and directories, job boards, research indexes, news, and each result's own site. SpecStream reads at the moment you ask.
+
+## Docs and support
+
+- [Getting started](https://specstream.ai/docs/getting-started), [API](https://specstream.ai/docs/api), [SDKs](https://specstream.ai/docs/sdk), [MCP](https://specstream.ai/docs/mcp)
+- [Pricing](https://specstream.ai/pricing)
+- [Agent guide](https://specstream.ai/agents.md) and [`llms.txt`](https://specstream.ai/llms.txt)
+- Support: support@specstream.ai
+- Security reports: see [SECURITY.md](SECURITY.md)
+
+## License
+
+MIT. See [LICENSE](LICENSE). SpecStream the service is governed by its [terms](https://specstream.ai/terms).

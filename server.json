@@ -1,0 +1,43 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.specstream/specstream",
+  "title": "SpecStream",
+  "description": "Give your agent finished lists from the live web: every row with its source, priced per match.",
+  "version": "1.2.0",
+  "websiteUrl": "https://specstream.ai",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.specstream.ai/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Your SpecStream API key as a Bearer token. Create one under Agents & API in the workspace. Clients that support MCP sign-in can leave this empty.",
+          "isRequired": false,
+          "isSecret": true,
+          "value": "Bearer {api_key}",
+          "variables": {
+            "api_key": {
+              "description": "SpecStream API key",
+              "isRequired": false,
+              "isSecret": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/Specstreamai/specstream-tools",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://specstream.ai/icons/icon-512.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ]
+}

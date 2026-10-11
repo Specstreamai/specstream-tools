@@ -1,0 +1,34 @@
+{
+  "name": "specstream",
+  "version": "1.0.0",
+  "description": "Ask for a list from Cursor and get every match from the live web, repositories, datasets, companies and places, each with its reason and source. You approve the price first.",
+  "author": {
+    "name": "SpecStream",
+    "email": "support@specstream.ai"
+  },
+  "homepage": "https://specstream.ai",
+  "repository": "https://github.com/Specstreamai/specstream-tools",
+  "license": "MIT",
+  "keywords": [
+    "web-data",
+    "search",
+    "enrichment",
+    "monitoring",
+    "lists",
+    "mcp"
+  ],
+  "logo": "assets/specstream-mark.svg",
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "SPECSTREAM_API_KEY": {
+        "type": "string",
+        "title": "SpecStream API key",
+        "description": "Create one under Agents & API in your SpecStream workspace. Keep it in this setting, never in a prompt or a commit. Paid work still needs your approval of the price."
+      }
+    },
+    "required": ["SPECSTREAM_API_KEY"]
+  }
+}

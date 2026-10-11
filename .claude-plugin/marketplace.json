@@ -1,0 +1,23 @@
+{
+  "name": "specstream",
+  "owner": {
+    "name": "SpecStream",
+    "email": "support@specstream.ai"
+  },
+  "metadata": {
+    "description": "SpecStream for Claude Code: the live web data engine for teams and agents."
+  },
+  "plugins": [
+    {
+      "name": "specstream",
+      "source": "./plugins/claude-code",
+      "description": "Ask for a list in plain words and get every match from the live web, with its source. Adds the SpecStream MCP server and four skills: compile, review-work, approve-work and continue-work.",
+      "version": "1.0.0",
+      "author": { "name": "SpecStream" },
+      "homepage": "https://specstream.ai",
+      "repository": "https://github.com/Specstreamai/specstream-tools",
+      "license": "MIT",
+      "keywords": ["web-data", "lists", "mcp", "search"]
+    }
+  ]
+}

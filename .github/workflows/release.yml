@@ -1,0 +1,65 @@
+# Publishes one SDK or proxy package. Run it from the Actions tab, or:
+#   gh workflow run release.yml -f package=sdk-ts
+#
+# The n8n node has its own workflow, publish.yml, because n8n requires that file name.
+#
+# Secrets, set once with `gh secret set`:
+#   NPM_TOKEN       npm granular access token with read and write on @specstream/sdk
+#   PYPI_API_TOKEN  PyPI API token for the project (or the account, for the first upload)
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package to publish
+        type: choice
+        required: true
+        options:
+          - sdk-ts
+          - sdk-py
+          - mcp-stdio
+
+jobs:
+  npm:
+    if: ${{ inputs.package == 'sdk-ts' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: packages/sdk-ts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm test
+      - name: Publish with provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance
+
+  pypi:
+    if: ${{ inputs.package == 'sdk-py' || inputs.package == 'mcp-stdio' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.package == 'sdk-py' && 'packages/sdk-py' || 'packages/mcp-stdio' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          python -m pip install build twine
+          python -m build
+          python -m twine check dist/*
+      - name: Upload
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: python -m twine upload dist/*

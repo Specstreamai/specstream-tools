@@ -1,0 +1,21 @@
+{
+  "name": "specstream-typescript-example",
+  "private": true,
+  "type": "module",
+  "description": "Read a request, show the price, ask, run it, and print the first results.",
+  "license": "MIT",
+  "scripts": {
+    "start": "node --experimental-strip-types quickstart.ts",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@specstream/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22.6"
+  }
+}

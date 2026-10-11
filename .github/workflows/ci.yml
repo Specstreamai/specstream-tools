@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: SDK tests
+        working-directory: packages/sdk-py
+        run: |
+          python -m pip install pytest build
+          PYTHONPATH=. python -m pytest -q tests
+          python -m build
+      - name: stdio proxy builds
+        working-directory: packages/mcp-stdio
+        run: python -m build
+      - name: GitHub Action tests
+        working-directory: actions/find-action
+        run: python -m unittest test_run
+
+  typescript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: SDK tests
+        working-directory: packages/sdk-ts
+        run: |
+          npm ci
+          npm test
+      - name: n8n node lint, build and test
+        working-directory: integrations/n8n
+        run: |
+          npm ci
+          npm run lint
+          npm run build
+          npm test

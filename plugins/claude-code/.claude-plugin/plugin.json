@@ -1,0 +1,13 @@
+{
+  "name": "specstream",
+  "version": "1.0.0",
+  "description": "The live web data engine for teams and agents. Ask for a list in plain words and get every match with the page behind each fact. Paid work starts only at a price you approve.",
+  "author": {
+    "name": "SpecStream",
+    "url": "https://specstream.ai"
+  },
+  "homepage": "https://specstream.ai",
+  "repository": "https://github.com/Specstreamai/specstream-tools",
+  "license": "MIT",
+  "keywords": ["specstream", "mcp", "web-data", "lists", "sources"]
+}
