@@ -18,7 +18,7 @@ Never guess or invent a key.
 
 ## 2. Install the proxy
 
-Requires Python 3.10 or newer.
+Requires Python 3.12 or newer.
 
 ```sh
 pip install specstream-mcp-stdio

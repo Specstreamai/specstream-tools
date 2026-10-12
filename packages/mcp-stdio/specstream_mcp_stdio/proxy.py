@@ -4,6 +4,10 @@ Both MCP eras pass through. A request that carries its protocol version in
 `params._meta` (2026-07-28 and later) is forwarded statelessly with the version, method
 and name mirrored into headers. A client that starts with `initialize` gets the session
 revision the server negotiates, and its session id is kept for later requests.
+
+Without a key it still starts: it answers `initialize` and `tools/list` from the tool list
+shipped with the package, so a client or a directory can see what the server offers, and
+every tool call says how to get a key.
 """
 
 from __future__ import annotations
@@ -16,6 +20,7 @@ import sys
 import urllib.error
 import urllib.request
 from collections.abc import Mapping
+from pathlib import Path
 from typing import Any, TextIO
 from urllib.parse import urlsplit
 
@@ -23,7 +28,19 @@ DEFAULT_MCP_URL = "https://api.specstream.ai/mcp"
 PROTOCOL_VERSION = "2025-11-25"
 VERSION_KEY = "io.modelcontextprotocol/protocolVersion"
 NAMED_METHODS = {"tools/call": "name", "prompts/get": "name", "resources/read": "uri"}
-MISSING_KEY = "SPECSTREAM_API_KEY is required. MCP does not elicit keys."
+MISSING_KEY = (
+    "SPECSTREAM_API_KEY is not set, so SpecStream lists its tools but can't run them. "
+    "Create a key under Agents & API at https://specstream.ai/workspace and set "
+    "SPECSTREAM_API_KEY where this server starts."
+)
+KNOWN_VERSIONS = ("2024-11-05", "2025-03-26", "2025-06-18", PROTOCOL_VERSION)
+TOOLS_FILE = Path(__file__).with_name("tools.json")
+SERVER_INFO = {
+    "name": "specstream",
+    "title": "SpecStream",
+    "version": "1.2.0",
+    "websiteUrl": "https://specstream.ai",
+}
 
 
 def authorization_from_env(env: Mapping[str, str]) -> str:
@@ -189,6 +206,43 @@ def _error_body(raw: str, request_id: Any) -> dict[str, Any] | None:
     return None
 
 
+def _keyless_reply(message: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Answer one message without a key. Notifications get no answer."""
+    if "id" not in message:
+        return None
+    method = message.get("method")
+    params = message.get("params")
+    params = params if isinstance(params, Mapping) else {}
+    result: dict[str, Any]
+    if method == "initialize":
+        requested = params.get("protocolVersion")
+        result = {
+            "protocolVersion": requested if requested in KNOWN_VERSIONS else PROTOCOL_VERSION,
+            "capabilities": {"tools": {"listChanged": False}},
+            "serverInfo": SERVER_INFO,
+            "instructions": MISSING_KEY,
+        }
+    elif method == "ping":
+        result = {}
+    elif method == "tools/list":
+        result = {"tools": json.loads(TOOLS_FILE.read_text(encoding="utf-8"))}
+    elif method == "resources/list":
+        result = {"resources": []}
+    elif method == "resources/templates/list":
+        result = {"resourceTemplates": []}
+    elif method == "prompts/list":
+        result = {"prompts": []}
+    elif method == "tools/call":
+        result = {"content": [{"type": "text", "text": MISSING_KEY}], "isError": True}
+    else:
+        return {
+            "jsonrpc": "2.0",
+            "id": message["id"],
+            "error": {"code": -32601, "message": MISSING_KEY},
+        }
+    return {"jsonrpc": "2.0", "id": message["id"], "result": result}
+
+
 def main(
     argv: list[str] | None = None,
     env: Mapping[str, str] | None = None,
@@ -201,12 +255,13 @@ def main(
     in_stream = stdin if stdin is not None else sys.stdin
     out_stream = stdout if stdout is not None else sys.stdout
     err_stream = stderr if stderr is not None else sys.stderr
+    authorization: str | None
     try:
-        authorization = authorization_from_env(environ)
         url = _mcp_url(environ)
+        authorization = authorization_from_env(environ)
     except KeyError:
+        authorization = None
         print(MISSING_KEY, file=err_stream)
-        return 2
     except ValueError as exc:
         print(str(exc), file=err_stream)
         return 2
@@ -226,6 +281,12 @@ def main(
             return 1
         if message.get("method") == "notifications/cancelled" and "id" not in message:
             # Each request is a blocking POST here, so there is nothing to cancel upstream.
+            continue
+        if authorization is None:
+            reply = _keyless_reply(message)
+            if reply is not None:
+                out_stream.write(json.dumps(reply, separators=(",", ":")) + "\n")
+                out_stream.flush()
             continue
         try:
             status, headers, body = _post_json(
