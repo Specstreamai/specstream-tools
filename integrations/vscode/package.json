@@ -2,7 +2,7 @@
   "name": "specstream",
   "displayName": "SpecStream",
   "description": "Give your agent finished lists from the live web. One plain-English request returns every match, each with its source.",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "publisher": "specstream",
   "license": "MIT",
   "homepage": "https://specstream.ai",
@@ -21,7 +21,6 @@
   "keywords": [
     "mcp",
     "specstream",
-    "lead list",
     "web data",
     "agent",
     "chat participant",
