@@ -11,6 +11,6 @@ Each job has its own price tool. For a new request, call `quote_new_list` with t
 
 Show the price in text: what will be found, the facts that come back, the most the work can cost, and when the price expires. Use only the amounts the price states. A price lasts 30 minutes.
 
-Getting a price spends nothing. `get_capacity_balance` shows the balance, but a balance is not permission to spend. Never approve a price for the user.
+Getting a price spends nothing. `get_capacity_balance` shows the balance, but a balance is not permission to spend. The work runs only after the user says yes to that price in the conversation.
 
 Anything about balance or payment happens in the user's SpecStream workspace, not in chat. Don't open a checkout or a payment page.
