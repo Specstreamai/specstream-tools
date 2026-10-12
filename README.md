@@ -21,14 +21,11 @@ Your agent asks for "food banks in Texas, with their annual revenue" and gets ro
 
 ![A request, its price, and a list ready to use](assets/readme-demo.gif)
 
-<!-- Registry badges, to switch on after the first publish. Replace <id> with the id each registry shows.
 [![PyPI](https://img.shields.io/pypi/v/specstream-client)](https://pypi.org/project/specstream-client/)
 [![npm](https://img.shields.io/npm/v/@specstream/sdk)](https://www.npmjs.com/package/@specstream/sdk)
 [![n8n node](https://img.shields.io/npm/v/n8n-nodes-specstream?label=n8n%20node)](https://www.npmjs.com/package/n8n-nodes-specstream)
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-ai.specstream%2Fspecstream-blue)](https://registry.modelcontextprotocol.io/v0.1/servers?search=ai.specstream)
-[![Glama](https://glama.ai/mcp/servers/<id>/badge)](https://glama.ai/mcp/servers/<id>)
-[![Smithery](https://smithery.ai/badge/<namespace>/<server>)](https://smithery.ai/servers/<namespace>/<server>)
--->
+[![Smithery](https://smithery.ai/badge/specstream/specstream)](https://smithery.ai/servers/specstream/specstream)
 
 This repository holds what you install around SpecStream: MCP client setup, agent plugins and skills, SDKs, the n8n node, a GitHub Action, and examples. The product itself runs at [specstream.ai](https://specstream.ai). Licensed MIT.
 
@@ -197,7 +194,7 @@ mcpServers:
       SPECSTREAM_API_KEY: ${{ secrets.SPECSTREAM_API_KEY }}
 ```
 
-Start Zed and Cline from a shell where `SPECSTREAM_API_KEY` is set.
+Start Zed and Cline from a shell where `SPECSTREAM_API_KEY` is set. Agents installing SpecStream for someone can follow [llms-install.md](llms-install.md).
 
 ### Gemini CLI
 
