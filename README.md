@@ -47,7 +47,7 @@ This repository holds what you install around SpecStream: MCP client setup, agen
 
 ## Connect an agent
 
-The MCP server is `https://api.specstream.ai/mcp` (Streamable HTTP, 96 tools). Your agent works on your account: the same balance, permissions and spending limits you have.
+The MCP server is `https://api.specstream.ai/mcp` (Streamable HTTP, 97 tools). Your agent works on your account: the same balance, permissions and spending limits you have.
 
 1. Open **Agents & API** in the [workspace](https://specstream.ai/workspace) and create an API key. Give it only what the task needs: read, prepare, or execute, the projects it may use, an expiry, and a spending limit.
 2. Put it in an environment variable, so no file holds it:
