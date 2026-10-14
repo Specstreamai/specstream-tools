@@ -10,6 +10,9 @@ import { NodeConnectionTypes, NodeOperationError } from "n8n-workflow";
 
 import { requireConfirmMaxUsd } from "../../lib/confirm_max_usd.js";
 
+// Fields every row carries; a column with the same name is renamed so it can't overwrite them.
+const RESERVED = new Set(["id", "list_id", "list_link", "position", "source_url", "checked_at", "list_status"]);
+
 // One row as flat fields: each column's label holds what the list shows, plus the page the
 // row's first value was read from and the link to the list.
 function flattenRow(listId: string, record: IDataObject): IDataObject {
@@ -21,8 +24,9 @@ function flattenRow(listId: string, record: IDataObject): IDataObject {
   };
   let source: IDataObject | undefined;
   for (const cell of (record.cells as IDataObject[] | undefined) || []) {
-    const label = String(cell.label || cell.column_id || "").trim();
+    let label = String(cell.label || cell.column_id || "").trim();
     if (!label) continue;
+    if (RESERVED.has(label)) label = `${label} (column)`;
     row[label] = (cell.display ?? cell.value ?? "") as string;
     const provenance = cell.provenance as IDataObject | null | undefined;
     if (!source && provenance && provenance.source_url) source = provenance;
@@ -238,6 +242,29 @@ export class Specstream implements INodeType {
         if (!q) throw fail("Describe the list to find");
         if (!Number.isSafeInteger(count) || count < 1) throw fail("Number of Results must be 1 or more");
         if (!Number.isSafeInteger(maxCents) || maxCents <= 0) throw fail("Set a Maximum Price above 0");
+        // A retried item in the same execution recovers the run it already started instead of buying the list again.
+        const requestKey = `n8n-${this.getExecutionId()}-${this.getNode().id}-${i}`;
+        let recovered: IDataObject | undefined;
+        try {
+          recovered = await call("GET", `/v1/capacity/requests/${encodeURIComponent(requestKey)}`);
+        } catch {
+          recovered = undefined;
+        }
+        if (recovered && recovered.find_id) {
+          const listId = String(recovered.find_id);
+          out.push({
+            json: {
+              list_id: listId,
+              status: (recovered.state as string) || "running",
+              request: q,
+              number_of_results: count,
+              maximum_price_usd: Number(recovered.maximum_cents || maxCents) / 100,
+              list_link: `https://specstream.ai/workspace/collections/${listId}`,
+            },
+            pairedItem: { item: i },
+          });
+          continue;
+        }
         const reading = await call("POST", "/v1/parse", { q, locale: "en-US" });
         if (reading.status !== "runnable") {
           throw fail(
@@ -259,13 +286,13 @@ export class Specstream implements INodeType {
           quote_id: quote.quote_id as string,
           quote_hash: quote.quote_hash as string,
           confirm_max_cents: priceCents,
-          idempotency_key: `n8n-${this.getExecutionId()}-${i}-${Date.now()}`,
+          idempotency_key: requestKey,
         });
         const listId = String(run.find_id);
         out.push({
           json: {
             list_id: listId,
-            status: run.status || "running",
+            status: run.state || run.status || "running",
             request: reading.canonical_sentence || q,
             number_of_results: count,
             maximum_price_usd: priceCents / 100,

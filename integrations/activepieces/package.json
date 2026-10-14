@@ -1,0 +1,36 @@
+{
+  "name": "@specstream/piece-specstream",
+  "version": "0.1.0",
+  "description": "SpecStream piece for Activepieces: ask for any list in plain words and get every match from the live web, with its source.",
+  "license": "MIT",
+  "homepage": "https://specstream.ai/docs/integrations",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Specstreamai/specstream-tools.git",
+    "directory": "integrations/activepieces"
+  },
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "activepieces",
+    "piece",
+    "specstream",
+    "lead-lists",
+    "web-data"
+  ],
+  "dependencies": {
+    "@activepieces/pieces-common": "^0.12.5",
+    "@activepieces/pieces-framework": "^0.32.0",
+    "@activepieces/shared": "*"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0"
+  }
+}
