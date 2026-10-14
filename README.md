@@ -198,6 +198,14 @@ Start Zed and Cline from a shell where `SPECSTREAM_API_KEY` is set. Agents insta
 
 ### Gemini CLI
 
+Install the extension (the MCP server plus instructions to show the price and wait for a yes):
+
+```sh
+gemini extensions install https://github.com/Specstreamai/specstream-tools
+```
+
+Or add only the server:
+
 ```sh
 gemini mcp add --transport http specstream https://api.specstream.ai/mcp \
   --header "Authorization: Bearer $SPECSTREAM_API_KEY"

@@ -1,0 +1,15 @@
+{
+  "name": "specstream",
+  "version": "1.0.0",
+  "description": "SpecStream, the live web data engine for teams and agents: ask for any list in plain words and get every match from the live web, with its source.",
+  "mcpServers": {
+    "specstream": {
+      "httpUrl": "https://api.specstream.ai/mcp",
+      "headers": {
+        "Authorization": "Bearer ${SPECSTREAM_API_KEY}"
+      },
+      "timeout": 120000
+    }
+  },
+  "contextFileName": "GEMINI.md"
+}
