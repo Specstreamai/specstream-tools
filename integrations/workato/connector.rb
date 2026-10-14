@@ -280,14 +280,14 @@
           'rows' => rows
         }
       end
-    },
-
-    custom_action: true,
-    custom_action_help: {
-      body: 'Call any SpecStream API endpoint with this connection. Paths start at /v1.',
-      learn_more_url: 'https://specstream.ai/docs/api',
-      learn_more_text: 'SpecStream API'
     }
+  },
+
+  custom_action: true,
+  custom_action_help: {
+    body: 'Call any SpecStream API endpoint with this connection. Paths start at /v1.',
+    learn_more_url: 'https://specstream.ai/docs/api',
+    learn_more_text: 'SpecStream API'
   },
 
   triggers: {
