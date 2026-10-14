@@ -1,0 +1,53 @@
+identity:
+  name: find_list
+  author: specstream
+  label:
+    en_US: Find a List
+description:
+  human:
+    en_US: Ask for a list in plain words. SpecStream prices it first and starts it only if the price is within your maximum.
+  llm: Starts a SpecStream list from a plain-English request describing what every row must meet and the details to bring back, for example "roofing companies in Columbus, Ohio with their website and phone". The list starts only if its price is at or below the maximum price set on this tool; otherwise it doesn't start, costs nothing, and the price is returned. Waits up to the given number of seconds and returns the rows found so far with the list ID, so Get List Results can fetch the rest later.
+parameters:
+  - name: request
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: What to find
+    human_description:
+      en_US: Describe the list in plain words, with what every row must meet and the details to bring back.
+    llm_description: The list to find in plain English, including the place or conditions every row must meet and the facts to bring back for each row.
+  - name: count
+    type: number
+    required: true
+    form: llm
+    default: 25
+    min: 1
+    max: 1000
+    label:
+      en_US: Number of results
+    human_description:
+      en_US: How many matching rows to find. You pay only for rows that match.
+    llm_description: How many matching rows to find, from 1 to 1000.
+  - name: max_price_usd
+    type: number
+    required: true
+    form: form
+    label:
+      en_US: Maximum price (USD)
+    human_description:
+      en_US: The most one list may cost. Set by you, never by the model. Above it, nothing runs.
+  - name: wait_seconds
+    type: number
+    required: false
+    form: form
+    default: 90
+    min: 0
+    max: 150
+    label:
+      en_US: Wait for results (seconds)
+    human_description:
+      en_US: How long to wait for rows before returning. The list keeps running after that; use Get List Results for the rest.
+extra:
+  python:
+    source: tools/find_list.py

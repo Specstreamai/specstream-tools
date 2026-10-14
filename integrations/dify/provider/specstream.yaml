@@ -1,0 +1,28 @@
+identity:
+  author: specstream
+  name: specstream
+  label:
+    en_US: SpecStream
+  description:
+    en_US: Ask for a list in plain words and get every matching row from the live web, each with its source.
+  icon: icon.png
+  tags:
+    - search
+    - business
+credentials_for_provider:
+  specstream_api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: SpecStream API key
+    placeholder:
+      en_US: ss_live_...
+    help:
+      en_US: Create a key in SpecStream under Agents & API. New accounts get $10 of work free.
+    url: https://specstream.ai/workspace/settings
+tools:
+  - tools/find_list.yaml
+  - tools/get_list_results.yaml
+extra:
+  python:
+    source: provider/specstream.py
