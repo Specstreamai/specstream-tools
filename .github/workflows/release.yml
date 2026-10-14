@@ -19,6 +19,7 @@ on:
           - sdk-ts
           - sdk-py
           - mcp-stdio
+          - langchain
 
 jobs:
   npm:
@@ -44,11 +45,11 @@ jobs:
         run: npm publish --access public --provenance
 
   pypi:
-    if: ${{ inputs.package == 'sdk-py' || inputs.package == 'mcp-stdio' }}
+    if: ${{ inputs.package == 'sdk-py' || inputs.package == 'mcp-stdio' || inputs.package == 'langchain' }}
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ inputs.package == 'sdk-py' && 'packages/sdk-py' || 'packages/mcp-stdio' }}
+        working-directory: ${{ inputs.package == 'sdk-py' && 'packages/sdk-py' || inputs.package == 'langchain' && 'packages/langchain-specstream' || 'packages/mcp-stdio' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

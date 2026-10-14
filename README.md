@@ -230,6 +230,21 @@ Install the community node from **Settings > Community nodes**: `n8n-nodes-specs
 
 ### LangChain
 
+```bash
+pip install -U langchain-specstream
+```
+
+```python
+from langchain.agents import create_agent
+from langchain_specstream import specstream_tools
+
+agent = create_agent("anthropic:claude-sonnet-5-5", tools=specstream_tools(max_price_usd=5))
+```
+
+Two tools and a retriever. The agent writes the request and picks how many rows; the price cap stays in your code, where the model can't raise it. Every row comes back with the page it was read from. Details in [`packages/langchain-specstream`](packages/langchain-specstream).
+
+To load every SpecStream tool over MCP instead:
+
 ```python
 import os
 from langchain_mcp_adapters.client import MultiServerMCPClient
