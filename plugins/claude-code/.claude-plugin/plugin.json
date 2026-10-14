@@ -1,6 +1,6 @@
 {
   "name": "specstream",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "The live web data engine for teams and agents. Ask for a list in plain words and get every match with the page behind each fact. Paid work starts only at a price you approve.",
   "author": {
     "name": "SpecStream",
@@ -18,5 +18,8 @@
   ],
   "displayName": "SpecStream",
   "icon": ".claude-plugin/icon.png",
-  "privacyPolicyUrl": "https://specstream.ai/privacy"
+  "privacyPolicyUrl": "https://specstream.ai/privacy",
+  "supportUrl": "https://specstream.ai/talk-to-a-human?kind=support",
+  "documentationUrl": "https://specstream.ai/docs/mcp/claude",
+  "termsOfServiceUrl": "https://specstream.ai/terms"
 }
