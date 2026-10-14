@@ -1,21 +1,32 @@
-# Publishes the n8n community node to npm with a provenance statement.
+# Publishes the n8n community node and the Activepieces piece to npm with a
+# provenance statement.
 #
 # n8n only verifies community nodes that are published from GitHub Actions with
 # provenance. The workflow file must be named publish.yml if you set up an npm
 # Trusted Publisher; otherwise set the NPM_TOKEN repository secret (a granular
-# access token with read and write on n8n-nodes-specstream).
+# access token with read and write on the packages below).
 #
-# Run it from the Actions tab, or:  gh workflow run publish.yml
+# Run it from the Actions tab, or:  gh workflow run publish.yml -f package=n8n
 name: publish
 
 on:
   workflow_dispatch:
+    inputs:
+      package:
+        description: Package to publish
+        type: choice
+        options:
+          - n8n
+          - activepieces
+        default: n8n
   push:
     tags:
       - "n8n-v*"
+      - "activepieces-v*"
 
 jobs:
   n8n:
+    if: inputs.package == 'n8n' || startsWith(github.ref, 'refs/tags/n8n-v')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -39,5 +50,29 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           RELEASE_MODE: "true"
+          NPM_CONFIG_PROVENANCE: "true"
+        run: npm publish --access public
+
+  activepieces:
+    if: inputs.package == 'activepieces' || startsWith(github.ref, 'refs/tags/activepieces-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: integrations/activepieces
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run build
+      - name: Publish with provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: "true"
         run: npm publish --access public
