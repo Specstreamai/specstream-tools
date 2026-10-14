@@ -27,8 +27,9 @@ async function call<T>({
   path: string;
   body?: unknown;
 }): Promise<T> {
+  let response;
   try {
-    const response = await httpClient.sendRequest<{ data: T }>({
+    response = await httpClient.sendRequest<{ data?: unknown; error?: unknown }>({
       method,
       url: `${BASE_URL}${path}`,
       headers: {
@@ -37,7 +38,6 @@ async function call<T>({
       },
       body,
     });
-    return response.body.data;
   } catch (e) {
     const status = statusOf(e);
     const message = messageOf(e);
@@ -45,6 +45,15 @@ async function call<T>({
       `SpecStream ${status ? `returned HTTP ${status}` : 'could not be reached'}${message ? `: ${message}` : ''}`,
     );
   }
+  // A success status must still carry a data object and no error, or the step stops.
+  const payload = response.body;
+  if (
+    !payload || typeof payload !== 'object' || payload.error != null ||
+    !payload.data || typeof payload.data !== 'object' || Array.isArray(payload.data)
+  ) {
+    throw new Error('SpecStream returned a response this piece could not read');
+  }
+  return payload.data as T;
 }
 
 function statusOf(e: unknown): number | undefined {
