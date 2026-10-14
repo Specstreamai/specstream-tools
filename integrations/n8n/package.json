@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-specstream",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "SpecStream for n8n: ask for a list in plain words and pass every match, with its source, to the next node. Priced before it runs.",
   "license": "MIT",
   "homepage": "https://specstream.ai/docs/integrations",
