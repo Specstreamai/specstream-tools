@@ -16,5 +16,7 @@
     "lists",
     "sources"
   ],
-  "displayName": "SpecStream"
+  "displayName": "SpecStream",
+  "icon": ".claude-plugin/icon.png",
+  "privacyPolicyUrl": "https://specstream.ai/privacy"
 }
