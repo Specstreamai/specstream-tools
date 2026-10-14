@@ -38,6 +38,10 @@ This repository holds what you install around SpecStream: MCP client setup, agen
 | [`.cursor-plugin/`](.cursor-plugin) | Cursor plugin |
 | [`packages/sdk-py/`](packages/sdk-py) | `specstream-client`: Python client and the `specstream` command |
 | [`packages/sdk-ts/`](packages/sdk-ts) | `@specstream/sdk`: TypeScript client |
+| [`packages/langchain-specstream/`](packages/langchain-specstream) | `langchain-specstream`: LangChain tools and a retriever |
+| [`packages/llama-index-tools-specstream/`](packages/llama-index-tools-specstream) | `llama-index-tools-specstream`: LlamaIndex tool spec and a retriever |
+| [`packages/crewai-specstream/`](packages/crewai-specstream) | `crewai-specstream`: CrewAI tools |
+| [`packages/ai-sdk/`](packages/ai-sdk) | `@specstream/ai-sdk`: Vercel AI SDK tools |
 | [`packages/mcp-stdio/`](packages/mcp-stdio) | `specstream-mcp-stdio`: stdio proxy for clients that only start local servers |
 | [`integrations/n8n/`](integrations/n8n) | `n8n-nodes-specstream`: n8n community node |
 | [`integrations/vscode/`](integrations/vscode) | VS Code extension: MCP sign-in and `@specstream` chat |
@@ -260,6 +264,57 @@ tools = await client.get_tools()
 ```
 
 A full agent is in [`examples/langchain-mcp`](examples/langchain-mcp).
+
+### LlamaIndex
+
+```bash
+pip install -U llama-index-tools-specstream
+```
+
+```python
+from llama_index.core.agent.workflow import FunctionAgent
+from llama_index.tools.specstream import SpecStreamToolSpec
+
+agent = FunctionAgent(tools=SpecStreamToolSpec(max_price_usd=5).to_tool_list(), llm=llm)
+```
+
+The same two tools as a tool spec, plus a retriever that returns one node per row with its source in the metadata. The price cap stays on the spec, out of the model's reach. Details in [`packages/llama-index-tools-specstream`](packages/llama-index-tools-specstream).
+
+### CrewAI
+
+```bash
+pip install -U crewai-specstream
+```
+
+```python
+from crewai import Agent
+from crewai_specstream import specstream_tools
+
+analyst = Agent(role="Funding analyst", goal="Answer with a source for every claim",
+                backstory="You work from lists, not from memory.", tools=specstream_tools(max_price_usd=5))
+```
+
+The same two tools as CrewAI tools, with the key kept as a secret and async crews left unblocked. Details in [`packages/crewai-specstream`](packages/crewai-specstream).
+
+### Vercel AI SDK
+
+```bash
+npm install @specstream/ai-sdk ai zod
+```
+
+```ts
+import { generateText, stepCountIs } from "ai";
+import { specstreamTools } from "@specstream/ai-sdk";
+
+const { text } = await generateText({
+  model: "openai/gpt-5-mini",
+  tools: specstreamTools({ maxPriceUsd: 5 }),
+  stopWhen: stepCountIs(5),
+  prompt: "Find dental clinics in Lisbon with online booking, with their website.",
+});
+```
+
+Works with AI SDK 6 and 7. Details in [`packages/ai-sdk`](packages/ai-sdk).
 
 ### OpenAI Agents SDK
 

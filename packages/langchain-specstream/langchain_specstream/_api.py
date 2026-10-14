@@ -12,7 +12,9 @@ from dataclasses import dataclass
 from typing import Any, Callable
 
 DEFAULT_BASE_URL = "https://api.specstream.ai"
-USER_AGENT = "langchain-specstream/0.1.0"
+USER_AGENT = "langchain-specstream/0.1.1"
+# A list runs for up to about five minutes, so the tools wait a little longer than that by default.
+DEFAULT_WAIT_SECONDS = 420.0
 FINISHED = {"completed", "partial"}
 STOPPED = {"failed", "cancelled", "canceled", "expired"}
 # Fields every row carries; a column with the same name is renamed so it can't overwrite them.
@@ -125,7 +127,7 @@ class SpecStreamAPI:
         *,
         max_results: int,
         max_price_usd: float,
-        wait_seconds: float = 300.0,
+        wait_seconds: float = DEFAULT_WAIT_SECONDS,
         poll_interval: float = 3.0,
         locale: str = "en-US",
         key_prefix: str = "langchain",
@@ -139,12 +141,19 @@ class SpecStreamAPI:
         if max_cents <= 0:
             raise ValueError("max_price_usd must be greater than 0.")
 
-        # The same request with the same limits within the same hour gets the run it already started,
-        # so a retried agent step never buys the list twice.
-        hour = time.strftime("%Y-%m-%dT%H", time.gmtime())
-        digest = hashlib.sha256(f"{q}|{max_results}|{max_cents}|{hour}".encode()).hexdigest()[:32]
-        request_key = f"{key_prefix}-{digest}"
-        existing = self.request("GET", f"/v1/capacity/requests/{urllib.parse.quote(request_key, safe='')}", allow_404=True)
+        # The same request with the same limits gets the run it already started in this hour or the one before,
+        # so a retried agent step never buys the list twice, even across the turn of the hour.
+        def key_for(at: float) -> str:
+            hour = time.strftime("%Y-%m-%dT%H", time.gmtime(at))
+            return f"{key_prefix}-" + hashlib.sha256(f"{q}|{max_results}|{max_cents}|{hour}".encode()).hexdigest()[:32]
+
+        now = time.time()
+        request_key = key_for(now)
+        existing = None
+        for candidate in (request_key, key_for(now - 3600)):
+            existing = self.request("GET", f"/v1/capacity/requests/{urllib.parse.quote(candidate, safe='')}", allow_404=True)
+            if existing and existing.get("find_id"):
+                break
         if existing and existing.get("find_id"):
             find_id = existing["find_id"]
             maximum_cents = int(existing.get("maximum_cents") or max_cents)

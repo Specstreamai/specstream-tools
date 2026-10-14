@@ -28,6 +28,18 @@ jobs:
           python -m pip install "langchain-core>=0.3,<2" langchain-tests pytest build
           PYTHONPATH=. python -m pytest -q
           python -m build
+      - name: LlamaIndex package tests
+        working-directory: packages/llama-index-tools-specstream
+        run: |
+          python -m pip install "llama-index-core>=0.13,<0.15" pytest build
+          PYTHONPATH=. python -m pytest -q
+          python -m build
+      - name: CrewAI package tests
+        working-directory: packages/crewai-specstream
+        run: |
+          python -m pip install "crewai>=1.0,<2" pytest build
+          PYTHONPATH=. python -m pytest -q
+          python -m build
       - name: stdio proxy builds
         working-directory: packages/mcp-stdio
         run: python -m build
@@ -47,6 +59,13 @@ jobs:
         run: |
           npm ci
           npm test
+      - name: AI SDK package tests
+        working-directory: packages/ai-sdk
+        run: |
+          npm ci
+          npm test
+          npm run typecheck
+          npm run build
       - name: n8n node lint, build and test
         working-directory: integrations/n8n
         run: |

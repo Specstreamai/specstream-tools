@@ -1,0 +1,49 @@
+[project]
+name = "llama-index-tools-specstream"
+version = "0.1.0"
+description = "Give a LlamaIndex agent any list from the live web: ask in plain words, get every matching row with the page it came from, within a price you set in code."
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "SpecStream", email = "support@specstream.ai" }]
+maintainers = [{ name = "SpecStream", email = "support@specstream.ai" }]
+keywords = ["llama-index", "llamaindex", "specstream", "agents", "tools", "retriever", "web-data", "live-web", "lead-lists", "research"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Internet :: WWW/HTTP",
+  "Typing :: Typed",
+]
+dependencies = ["llama-index-core>=0.13.0,<0.15"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.urls]
+Homepage = "https://specstream.ai"
+Documentation = "https://specstream.ai/docs/llamaindex"
+Repository = "https://github.com/Specstreamai/specstream-tools/tree/main/packages/llama-index-tools-specstream"
+Issues = "https://github.com/Specstreamai/specstream-tools/issues"
+Pricing = "https://specstream.ai/pricing"
+
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["llama_index"]
+
+[tool.hatch.build.targets.sdist]
+include = ["llama_index", "tests", "README.md", "LICENSE"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -36,6 +36,7 @@ class FakeSpecStream:
         self.existing = existing
         self.calls = []
         self.polls = 0
+        self.misses = 0
 
     def __call__(self, request, timeout=None):
         url = urllib.parse.urlsplit(request.full_url)
@@ -43,6 +44,9 @@ class FakeSpecStream:
         self.calls.append((request.get_method(), url.path, body, dict(request.header_items())))
         query = dict(urllib.parse.parse_qsl(url.query))
         if url.path.startswith("/v1/capacity/requests/"):
+            if self.misses:
+                self.misses -= 1
+                raise urllib.error.HTTPError(request.full_url, 404, "Not Found", {}, io.BytesIO(b"{}"))
             if self.existing:
                 return self.reply(self.existing)
             raise urllib.error.HTTPError(request.full_url, 404, "Not Found", {}, io.BytesIO(b"{}"))
@@ -171,3 +175,14 @@ def test_a_missing_key_says_where_to_get_one(monkeypatch):
     monkeypatch.delenv("SPECSTREAM_API_KEY", raising=False)
     with pytest.raises(ValueError, match="SPECSTREAM_API_KEY"):
         SpecStreamFindList(max_price_usd=5)
+
+
+def test_a_retry_after_the_turn_of_the_hour_reuses_the_run_from_the_hour_before(api):
+    fake = api(existing={"find_id": "fnd_1", "maximum_cents": 250})
+    fake.misses = 1
+    result = json.loads(SpecStreamFindList(api_key=KEY, max_price_usd=5, poll_interval=0).invoke({"request": "Dental clinics in Lisbon"}))
+
+    lookups = [path for path in fake.paths() if path.startswith("/v1/capacity/requests/")]
+    assert len(lookups) == 2 and lookups[0] != lookups[1]
+    assert result["row_count"] == 2
+    assert "/v1/capacity/executions" not in fake.paths()

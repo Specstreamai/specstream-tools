@@ -1,0 +1,72 @@
+{
+  "name": "@specstream/ai-sdk",
+  "version": "0.1.0",
+  "description": "Give a Vercel AI SDK agent any list from the live web: every matching row with the page it was read from, priced per match before anything runs.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "test": "vitest run",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "ai": "^6.0.0 || ^7.0.0",
+    "zod": "^3.25.76 || ^4.1.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ai": "^7.0.140",
+    "typescript": "5.9.3",
+    "vitest": "^5.0.4",
+    "zod": "^4.6.7"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "ai-sdk",
+    "vercel-ai-sdk",
+    "ai",
+    "tools",
+    "agents",
+    "specstream",
+    "web-data",
+    "live-web",
+    "lead-lists",
+    "enrichment",
+    "ai-agents"
+  ],
+  "author": {
+    "name": "SpecStream",
+    "email": "support@specstream.ai",
+    "url": "https://specstream.ai"
+  },
+  "license": "MIT",
+  "homepage": "https://specstream.ai/docs/vercel-ai-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Specstreamai/specstream-tools.git",
+    "directory": "packages/ai-sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/Specstreamai/specstream-tools/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,6 +1,6 @@
 # langchain-specstream
 
-Give your LangChain agent any list from the live web. It asks in plain words – "dental clinics in Lisbon with online booking", "US startups that filed a $5M+ Form D this week" – and gets back every matching row, each with the page it was read from. The list starts only within a price you set in code, and the model can't raise it.
+Give your LangChain agent any list from the live web. Search tools hand an agent pages to read; SpecStream hands it the finished list. It asks in plain words – "dental clinics in Lisbon with online booking", "US startups that filed a $5M+ Form D this week" – and gets back every matching row, each with the page it was read from. The list starts only within a price you set in code, and the model can't raise it.
 
 ```bash
 pip install -U langchain-specstream
@@ -50,7 +50,7 @@ Columns follow the request. Ask for "breweries in Portland, Oregon that host eve
 
 | Tool | The model gives | What happens | Cost |
 | --- | --- | --- | --- |
-| `specstream_find_list` | `request`, `max_results` | Reads the request, prices it, starts it only within `max_price_usd`, waits up to `wait_seconds` (5 minutes by default) and returns every row | Only the rows that match |
+| `specstream_find_list` | `request`, `max_results` | Reads the request, prices it, starts it only within `max_price_usd`, waits up to `wait_seconds` (7 minutes by default) and returns every row | Only the rows that match |
 | `specstream_get_list_results` | `list_id` | Every row found so far, for a list that was still running | Free |
 
 When the price is above your maximum, nothing runs: the tool returns the price, so the agent can ask for fewer rows or tell the user. When a request is too vague to price ("clinics"), it returns how SpecStream read it, so the agent can add the place or the conditions.

@@ -10,7 +10,7 @@ from langchain_core.tools import BaseTool
 from langchain_core.utils import secret_from_env
 from pydantic import BaseModel, Field, SecretStr
 
-from langchain_specstream._api import DEFAULT_BASE_URL, SpecStreamAPI
+from langchain_specstream._api import DEFAULT_BASE_URL, DEFAULT_WAIT_SECONDS, SpecStreamAPI
 
 
 class FindListInput(BaseModel):
@@ -65,7 +65,7 @@ class SpecStreamFindList(_SpecStreamTool):
 
     max_price_usd: float = Field(gt=0)
     """The most one list may cost, in US dollars. If the price is higher, nothing runs."""
-    wait_seconds: float = 300.0
+    wait_seconds: float = DEFAULT_WAIT_SECONDS
     """How long to wait for the list to finish before returning the rows found so far."""
     poll_interval: float = 3.0
     locale: str = "en-US"

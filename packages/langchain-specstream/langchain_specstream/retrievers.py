@@ -8,7 +8,7 @@ from langchain_core.retrievers import BaseRetriever
 from langchain_core.utils import secret_from_env
 from pydantic import Field, SecretStr
 
-from langchain_specstream._api import DEFAULT_BASE_URL, SpecStreamAPI, SpecStreamError
+from langchain_specstream._api import DEFAULT_BASE_URL, DEFAULT_WAIT_SECONDS, SpecStreamAPI, SpecStreamError
 
 # Row fields that describe where the row came from rather than what it says.
 _META = ("list_id", "list_link", "position", "source_url", "checked_at")
@@ -31,7 +31,7 @@ class SpecStreamRetriever(BaseRetriever):
     max_price_usd: float = Field(gt=0)
     """The most one list may cost, in US dollars. If the price is higher, the retriever raises and nothing runs."""
     max_results: int = Field(default=25, ge=1, le=1000)
-    wait_seconds: float = 300.0
+    wait_seconds: float = DEFAULT_WAIT_SECONDS
     poll_interval: float = 3.0
     locale: str = "en-US"
 

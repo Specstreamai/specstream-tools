@@ -4,7 +4,7 @@
 # The n8n node has its own workflow, publish.yml, because n8n requires that file name.
 #
 # Secrets, set once with `gh secret set`:
-#   NPM_TOKEN       npm granular access token with read and write on @specstream/sdk
+#   NPM_TOKEN       npm granular access token with read and write on the @specstream packages
 #   PYPI_API_TOKEN  PyPI API token for the project (or the account, for the first upload)
 name: release
 
@@ -20,17 +20,20 @@ on:
           - sdk-py
           - mcp-stdio
           - langchain
+          - llamaindex
+          - crewai
+          - ai-sdk
 
 jobs:
   npm:
-    if: ${{ inputs.package == 'sdk-ts' }}
+    if: ${{ contains(fromJSON('["sdk-ts","ai-sdk"]'), inputs.package) }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     defaults:
       run:
-        working-directory: packages/sdk-ts
+        working-directory: ${{ fromJSON('{"sdk-ts":"packages/sdk-ts","ai-sdk":"packages/ai-sdk"}')[inputs.package] }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,17 +42,18 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm test
+      - run: npm run build
       - name: Publish with provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public --provenance
 
   pypi:
-    if: ${{ inputs.package == 'sdk-py' || inputs.package == 'mcp-stdio' || inputs.package == 'langchain' }}
+    if: ${{ contains(fromJSON('["sdk-py","mcp-stdio","langchain","llamaindex","crewai"]'), inputs.package) }}
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ inputs.package == 'sdk-py' && 'packages/sdk-py' || inputs.package == 'langchain' && 'packages/langchain-specstream' || 'packages/mcp-stdio' }}
+        working-directory: ${{ fromJSON('{"sdk-py":"packages/sdk-py","mcp-stdio":"packages/mcp-stdio","langchain":"packages/langchain-specstream","llamaindex":"packages/llama-index-tools-specstream","crewai":"packages/crewai-specstream"}')[inputs.package] }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
