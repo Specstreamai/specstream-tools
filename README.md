@@ -72,7 +72,7 @@ claude mcp add --transport http specstream https://api.specstream.ai/mcp \
   --header "Authorization: Bearer $SPECSTREAM_API_KEY"
 ```
 
-Or install the plugin, which adds the server and the four skills:
+Or install the plugin, which adds the server and the four skills. It signs you in through your browser the first time, so no key is needed:
 
 ```sh
 /plugin marketplace add Specstreamai/specstream-tools
