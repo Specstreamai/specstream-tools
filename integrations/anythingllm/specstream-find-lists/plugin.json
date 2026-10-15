@@ -1,0 +1,105 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/refs/heads/master/server/utils/agents/imported-manifest.schema.json",
+  "active": true,
+  "hubId": "specstream-find-lists",
+  "name": "SpecStream: find a list",
+  "schema": "skill-1.0.0",
+  "version": "1.0.0",
+  "description": "Gets a whole list from the live web when someone asks for many things at once (every roofer in Columbus rated 4.5 or better, every food bank in Texas with its revenue). Shows the price first, starts only after the person approves it, and returns every matching row with the page it came from. Pass list_id to read the rows of a list already started, for free. Not for a single fact.",
+  "author": "SpecStream",
+  "author_url": "https://specstream.ai",
+  "license": "MIT",
+  "setup_args": {
+    "SPECSTREAM_API_KEY": {
+      "type": "string",
+      "required": true,
+      "input": {
+        "type": "password",
+        "default": "",
+        "placeholder": "ss_live_...",
+        "hint": "Create a key under Agents & API in your SpecStream workspace at specstream.ai. New accounts start with $10 of work, no card."
+      },
+      "value": ""
+    },
+    "MAX_PRICE_USD": {
+      "type": "string",
+      "required": false,
+      "input": {
+        "type": "text",
+        "default": "5",
+        "placeholder": "5",
+        "hint": "The most one list may cost, in dollars. A price above this is refused before anything runs."
+      },
+      "value": ""
+    },
+    "APPROVAL": {
+      "type": "string",
+      "required": false,
+      "input": {
+        "type": "text",
+        "default": "ask",
+        "placeholder": "ask",
+        "hint": "ask: you approve every price in the chat. within_cap: lists at or under the cap start without asking."
+      },
+      "value": ""
+    },
+    "WAIT_SECONDS": {
+      "type": "string",
+      "required": false,
+      "input": {
+        "type": "text",
+        "default": "90",
+        "placeholder": "90",
+        "hint": "How long to wait for rows after a list starts. The list keeps running after that."
+      },
+      "value": ""
+    },
+    "MAX_ROWS": {
+      "type": "string",
+      "required": false,
+      "input": {
+        "type": "text",
+        "default": "25",
+        "placeholder": "25",
+        "hint": "Most rows handed to the model per read."
+      },
+      "value": ""
+    }
+  },
+  "examples": [
+    {
+      "prompt": "Find every roofing company in Columbus, Ohio rated 4.5 or better with fewer than 20 reviews. Include their phone number.",
+      "call": "{\"request\": \"Roofing companies in Columbus, Ohio rated 4.5 or better with fewer than 20 Google reviews, with their phone number\", \"count\": 50}"
+    },
+    {
+      "prompt": "List the food banks in Texas with their annual revenue.",
+      "call": "{\"request\": \"Food banks in Texas, with their annual revenue\", \"count\": 100}"
+    },
+    {
+      "prompt": "Show me the rows of list fnd_1a2b3c4d again.",
+      "call": "{\"list_id\": \"fnd_1a2b3c4d\"}"
+    }
+  ],
+  "entrypoint": {
+    "file": "handler.js",
+    "params": {
+      "request": {
+        "description": "The list in plain words: what to find, where, and what every row must meet. Leave empty when reading a list by list_id.",
+        "type": "string"
+      },
+      "count": {
+        "description": "How many rows to ask for, from 1 to 10000. Default 25.",
+        "type": "number"
+      },
+      "list_id": {
+        "description": "The ID of a list already started (starts with fnd_). Reads its rows for free instead of starting a new list.",
+        "type": "string"
+      },
+      "cursor": {
+        "description": "The next_cursor from an earlier read of the same list, to get the following rows.",
+        "type": "string"
+      }
+    }
+  },
+  "imported": true
+}

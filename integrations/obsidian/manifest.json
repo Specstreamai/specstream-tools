@@ -1,0 +1,10 @@
+{
+	"id": "specstream",
+	"name": "SpecStream",
+	"version": "1.0.0",
+	"minAppVersion": "1.14.4",
+	"description": "Find a list from the live web in plain words, see the price first, and insert the rows with their source pages as a Markdown table.",
+	"author": "SpecStream",
+	"authorUrl": "https://specstream.ai",
+	"isDesktopOnly": false
+}

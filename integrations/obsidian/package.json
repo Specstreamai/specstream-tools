@@ -1,0 +1,34 @@
+{
+	"name": "specstream-obsidian",
+	"version": "1.0.0",
+	"description": "SpecStream for Obsidian: ask for a list in plain words, see the price first, and insert the rows with their source pages as a Markdown table.",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"test": "node --experimental-strip-types --test test/*.test.ts",
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"lint": "eslint ."
+	},
+	"keywords": [
+		"obsidian",
+		"obsidian-plugin",
+		"specstream",
+		"lists",
+		"web-data"
+	],
+	"license": "MIT",
+	"devDependencies": {
+		"@eslint/js": "^9.39.4",
+		"@types/node": "^22.15.17",
+		"esbuild": "0.25.5",
+		"eslint": "^9.39.4",
+		"eslint-plugin-obsidianmd": "^0.4.2",
+		"globals": "^17.6.0",
+		"jiti": "^2.6.1",
+		"obsidian": "1.14.4",
+		"typescript": "^5.8.3",
+		"typescript-eslint": "^8.59.1"
+	}
+}
