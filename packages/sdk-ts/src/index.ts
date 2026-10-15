@@ -89,7 +89,7 @@ export class Client {
     this.baseUrl = (options.baseUrl || DEFAULT_BASE_URL).replace(/\/+$/, "");
     this.fetchFn = options.fetch ?? fetch;
     this.exportOrigin = options.exportOrigin;
-    this.timeoutMs = options.timeoutMs ?? 60_000;
+    this.timeoutMs = options.timeoutMs ?? 150_000;
     if (!Number.isSafeInteger(this.timeoutMs) || this.timeoutMs <= 0 || this.timeoutMs > 2_147_483_647) {
       throw new SpecstreamError("timeoutMs must be a positive integer up to 2147483647");
     }
@@ -641,6 +641,11 @@ export class Client {
     return this.request("POST", path) as Promise<Schemas["SpecLinkRevoked"]>;
   }
 
+  workspaceResearchInput(findId: string): Promise<Schemas["WorkspaceResearchInput"]> {
+    let path = `/v1/workspace/collections/${encodeURIComponent(findId)}/input`;
+    return this.request("GET", path) as Promise<Schemas["WorkspaceResearchInput"]>;
+  }
+
   workspaceSetScheduleDelivery(scheduleId: string, request: Schemas["ScheduleDeliveryInput"]): Promise<Schemas["ScheduleDeliveryData"]> {
     let path = `/v1/workspace/schedules/${encodeURIComponent(scheduleId)}/delivery`;
     return this.request("PATCH", path, request) as Promise<Schemas["ScheduleDeliveryData"]>;
@@ -1029,6 +1034,66 @@ export class Client {
     let path = `/v1/workspace/imports/${encodeURIComponent(importId)}/placement/${encodeURIComponent(placementId)}`;
     return this.request("GET", path) as Promise<Schemas["PlacementStatusData"]>;
   }
+
+  teachWebSource(request: Schemas["TeachWebSource"]): Promise<Schemas["WebSourcePreview"]> {
+    let path = `/v1/imports/web/sources`;
+    return this.request("POST", path, request) as Promise<Schemas["WebSourcePreview"]>;
+  }
+
+  listWebSources(): Promise<Schemas["WebSourceList"]> {
+    let path = `/v1/imports/web/sources`;
+    return this.request("GET", path) as Promise<Schemas["WebSourceList"]>;
+  }
+
+  getWebSource(sourceId: string): Promise<Schemas["WebSourceInfo"]> {
+    let path = `/v1/imports/web/sources/${encodeURIComponent(sourceId)}`;
+    return this.request("GET", path) as Promise<Schemas["WebSourceInfo"]>;
+  }
+
+  previewWebSource(sourceId: string): Promise<Schemas["WebSourcePreview"]> {
+    let path = `/v1/imports/web/sources/${encodeURIComponent(sourceId)}/previews`;
+    return this.request("POST", path) as Promise<Schemas["WebSourcePreview"]>;
+  }
+
+  getWebSourcePreview(previewId: string): Promise<Schemas["WebSourcePreview"]> {
+    let path = `/v1/imports/web/previews/${encodeURIComponent(previewId)}`;
+    return this.request("GET", path) as Promise<Schemas["WebSourcePreview"]>;
+  }
+
+  saveWebSourceList(request: Schemas["SaveWebSourceList"]): Promise<Schemas["WorkspaceImportData"]> {
+    let path = `/v1/imports/web/lists`;
+    return this.request("POST", path, request) as Promise<Schemas["WorkspaceImportData"]>;
+  }
+
+  getReconciliationFields(collectionId: string): Promise<Schemas["ReconciliationFields"]> {
+    let path = `/v1/reconciliation/collections/${encodeURIComponent(collectionId)}/fields`;
+    return this.request("GET", path) as Promise<Schemas["ReconciliationFields"]>;
+  }
+
+  listReconciliations(collectionId: string): Promise<Schemas["ReconciliationHistory"]> {
+    let path = `/v1/reconciliation/collections/${encodeURIComponent(collectionId)}/comparisons`;
+    return this.request("GET", path) as Promise<Schemas["ReconciliationHistory"]>;
+  }
+
+  prepareReconciliation(request: Schemas["ReconciliationPrepare"]): Promise<Schemas["ReconciliationView"]> {
+    let path = `/v1/reconciliation/comparisons`;
+    return this.request("POST", path, request) as Promise<Schemas["ReconciliationView"]>;
+  }
+
+  getReconciliation(comparisonId: string): Promise<Schemas["ReconciliationView"]> {
+    let path = `/v1/reconciliation/comparisons/${encodeURIComponent(comparisonId)}`;
+    return this.request("GET", path) as Promise<Schemas["ReconciliationView"]>;
+  }
+
+  applyReconciliation(comparisonId: string, request: Schemas["ReconciliationApply"]): Promise<Schemas["WorkspaceImportData"]> {
+    let path = `/v1/reconciliation/comparisons/${encodeURIComponent(comparisonId)}/apply`;
+    return this.request("POST", path, request) as Promise<Schemas["WorkspaceImportData"]>;
+  }
+
+  getReconciledInput(importId: string): Promise<Schemas["ReconciliationReceipt"]> {
+    let path = `/v1/reconciliation/imports/${encodeURIComponent(importId)}`;
+    return this.request("GET", path) as Promise<Schemas["ReconciliationReceipt"]>;
+  }
   // END GENERATED LIFECYCLE
 
   private headers(): Record<string, string> {
@@ -1039,7 +1104,7 @@ export class Client {
       Authorization: token,
       Accept: "application/json",
       "Content-Type": "application/json",
-      "User-Agent": "specstream-typescript/1.0.0",
+      "User-Agent": "specstream-typescript/1.1.0",
     };
   }
 

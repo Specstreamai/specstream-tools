@@ -1,13 +1,13 @@
 /** The SpecStream REST calls the tools share: read a request, price it, start it within a maximum, read its rows. */
 
 export const DEFAULT_BASE_URL = "https://api.specstream.ai";
-export const USER_AGENT = "@specstream/ai-sdk/0.1.0";
+export const USER_AGENT = "@specstream/ai-sdk/0.1.1";
 /** A list runs for up to about five minutes, so the tools wait a little longer than that by default. */
 export const DEFAULT_WAIT_SECONDS = 420;
 export const DEFAULT_POLL_INTERVAL_SECONDS = 3;
 export const DEFAULT_LOCALE = "en-US";
 export const MAX_RESULTS = 1000;
-const REQUEST_TIMEOUT_MS = 30_000;
+const REQUEST_TIMEOUT_MS = 150_000;
 const FINISHED = new Set(["completed", "partial"]);
 const STOPPED = new Set(["failed", "cancelled", "canceled", "expired"]);
 /** Fields every row carries; a column with the same name is renamed so it can't overwrite them. */

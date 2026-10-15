@@ -38,7 +38,7 @@ TOOLS_FILE = Path(__file__).with_name("tools.json")
 SERVER_INFO = {
     "name": "specstream",
     "title": "SpecStream",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "websiteUrl": "https://specstream.ai",
 }
 
@@ -152,7 +152,7 @@ def _post_json(
             request.add_header("MCP-Session-Id", session_id)
     try:
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
-        with opener.open(request, timeout=60) as response:
+        with opener.open(request, timeout=150) as response:
             status = int(response.status)
             headers = {key.lower(): value for key, value in response.headers.items()}
             raw = response.read().decode("utf-8")

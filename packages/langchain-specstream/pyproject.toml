@@ -1,6 +1,6 @@
 [project]
 name = "langchain-specstream"
-version = "0.1.1"
+version = "0.1.2"
 description = "Give a LangChain agent any list from the live web: ask in plain words, get every matching row with the page it came from, within a price you set in code."
 readme = "README.md"
 requires-python = ">=3.10"

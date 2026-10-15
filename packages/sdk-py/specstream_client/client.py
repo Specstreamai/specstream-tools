@@ -15,7 +15,7 @@ from specstream_client.authorization import require_work_authorization
 from specstream_client.families import FAMILIES
 
 DEFAULT_BASE_URL = "https://api.specstream.ai"
-USER_AGENT = "specstream-python/1.0.0"
+USER_AGENT = "specstream-python/1.1.0"
 
 OpenFn = Callable[[urllib.request.Request, float], Any]
 
@@ -55,7 +55,7 @@ class Client:
         api_key: str,
         base_url: str = DEFAULT_BASE_URL,
         opener: OpenFn | None = None,
-        timeout: float = 60.0,
+        timeout: float = 150.0,
         *,
         export_origin: str | None = None,
     ) -> None:
@@ -865,6 +865,14 @@ class Client:
         )
         return self._request("POST", path, None)
 
+    def workspace_research_input(self, find_id: str) -> dict[str, Any]:
+        """
+        Review each imported row: which business it matched and why, other possible matches, and
+        its result.
+        """
+        path = f"/v1/workspace/collections/{quote_path(find_id, safe='')}/input"
+        return self._request("GET", path, None)
+
     def workspace_set_schedule_delivery(
         self,
         schedule_id: str,
@@ -1385,6 +1393,87 @@ class Client:
             "/placement/"
             f"{quote_path(placement_id, safe='')}"
         )
+        return self._request("GET", path, None)
+
+    def teach_web_source(self, request: dict[str, Any]) -> dict[str, Any]:
+        """
+        Read one public page and learn its records and fields from 3 to 8 example rows. The
+        preview explains how each field was inferred and marks the example rows. Nothing becomes
+        a list until you save it..
+        """
+        path = "/v1/imports/web/sources"
+        return self._request("POST", path, request)
+
+    def list_web_sources(self) -> dict[str, Any]:
+        """List up to 100 saved website sources in a project. No page is read.."""
+        path = "/v1/imports/web/sources"
+        return self._request("GET", path, None)
+
+    def get_web_source(self, source_id: str) -> dict[str, Any]:
+        """Read a saved website source and how each of its columns is read.."""
+        path = f"/v1/imports/web/sources/{quote_path(source_id, safe='')}"
+        return self._request("GET", path, None)
+
+    def preview_web_source(self, source_id: str) -> dict[str, Any]:
+        """
+        Read the saved page again and preview its rows. Earlier lists stay unchanged. Columns
+        paired by position need fresh examples once the page changes..
+        """
+        path = f"/v1/imports/web/sources/{quote_path(source_id, safe='')}/previews"
+        return self._request("POST", path, None)
+
+    def get_web_source_preview(self, preview_id: str) -> dict[str, Any]:
+        """Read one source preview with its page hash, cell locations and field explanations.."""
+        path = f"/v1/imports/web/previews/{quote_path(preview_id, safe='')}"
+        return self._request("GET", path, None)
+
+    def save_web_source_list(self, request: dict[str, Any]) -> dict[str, Any]:
+        """
+        Save a reviewed preview as an imported list, using its preview hash. Saving does not
+        research or spend; quote and approve research on the list afterward..
+        """
+        path = "/v1/imports/web/lists"
+        return self._request("POST", path, request)
+
+    def get_reconciliation_fields(self, collection_id: str) -> dict[str, Any]:
+        """
+        Read the fields of a list you can open that can be used to match it against another
+        list.
+        """
+        path = f"/v1/reconciliation/collections/{quote_path(collection_id, safe='')}/fields"
+        return self._request("GET", path, None)
+
+    def list_reconciliations(self, collection_id: str) -> dict[str, Any]:
+        """List the recent comparisons that include this list (the latest 20, kept for 30 days)."""
+        path = f"/v1/reconciliation/collections/{quote_path(collection_id, safe='')}/comparisons"
+        return self._request("GET", path, None)
+
+    def prepare_reconciliation(self, request: dict[str, Any]) -> dict[str, Any]:
+        """
+        Compare two of your lists with exact or close-spelling rules and conflict checks, and
+        propose which rows correspond.
+        """
+        path = "/v1/reconciliation/comparisons"
+        return self._request("POST", path, request)
+
+    def get_reconciliation(self, comparison_id: str) -> dict[str, Any]:
+        """
+        Read a comparison: proposed pairs, alternatives, conflicts, missing values and sources.
+        """
+        path = f"/v1/reconciliation/comparisons/{quote_path(comparison_id, safe='')}"
+        return self._request("GET", path, None)
+
+    def apply_reconciliation(self, comparison_id: str, request: dict[str, Any]) -> dict[str, Any]:
+        """
+        Fill empty cells in a new list from the pairs you chose. The original lists stay
+        unchanged.
+        """
+        path = f"/v1/reconciliation/comparisons/{quote_path(comparison_id, safe='')}/apply"
+        return self._request("POST", path, request)
+
+    def get_reconciled_input(self, import_id: str) -> dict[str, Any]:
+        """Read which chosen pair filled each cell of a list made by matching."""
+        path = f"/v1/reconciliation/imports/{quote_path(import_id, safe='')}"
         return self._request("GET", path, None)
     # END GENERATED LIFECYCLE
 

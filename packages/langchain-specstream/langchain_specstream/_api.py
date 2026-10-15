@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from typing import Any, Callable
 
 DEFAULT_BASE_URL = "https://api.specstream.ai"
-USER_AGENT = "langchain-specstream/0.1.1"
+USER_AGENT = "langchain-specstream/0.1.2"
 # A list runs for up to about five minutes, so the tools wait a little longer than that by default.
 DEFAULT_WAIT_SECONDS = 420.0
 FINISHED = {"completed", "partial"}
@@ -65,7 +65,7 @@ def flatten_row(find_id: str, record: dict[str, Any]) -> dict[str, Any]:
 class SpecStreamAPI:
     api_key: str
     base_url: str = DEFAULT_BASE_URL
-    timeout: float = 30.0
+    timeout: float = 150.0
     opener: Opener | None = None
     sleep: Callable[[float], None] = time.sleep
     clock: Callable[[], float] = time.monotonic

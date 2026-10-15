@@ -494,6 +494,13 @@ COMMANDS = {'get-vocabulary': {'method': 'get_vocabulary',
                       'query': {},
                       'summary': 'Turn off a saved-request link without changing the request or '
                                  'its results'},
+ 'workspace-research-input': {'method': 'workspace_research_input',
+                              'arguments': ['find_id'],
+                              'body': False,
+                              'body_required': False,
+                              'query': {},
+                              'summary': 'Review each imported row: which business it matched and '
+                                         'why, other possible matches, and its result'},
  'workspace-set-schedule-delivery': {'method': 'workspace_set_schedule_delivery',
                                      'arguments': ['schedule_id'],
                                      'body': True,
@@ -966,4 +973,92 @@ COMMANDS = {'get-vocabulary': {'method': 'get_vocabulary',
                                 'body_required': False,
                                 'query': {},
                                 'summary': 'Read placement progress and per-row geocoding '
-                                           'outcomes'}}
+                                           'outcomes'},
+ 'teach-web-source': {'method': 'teach_web_source',
+                      'arguments': [],
+                      'body': True,
+                      'body_required': True,
+                      'query': {},
+                      'summary': 'Read one public page and learn its records and fields from 3 to '
+                                 '8 example rows. The preview explains how each field was inferred '
+                                 'and marks the example rows. Nothing becomes a list until you '
+                                 'save it.'},
+ 'list-web-sources': {'method': 'list_web_sources',
+                      'arguments': [],
+                      'body': False,
+                      'body_required': False,
+                      'query': {},
+                      'summary': 'List up to 100 saved website sources in a project. No page is '
+                                 'read.'},
+ 'get-web-source': {'method': 'get_web_source',
+                    'arguments': ['source_id'],
+                    'body': False,
+                    'body_required': False,
+                    'query': {},
+                    'summary': 'Read a saved website source and how each of its columns is read.'},
+ 'preview-web-source': {'method': 'preview_web_source',
+                        'arguments': ['source_id'],
+                        'body': False,
+                        'body_required': False,
+                        'query': {},
+                        'summary': 'Read the saved page again and preview its rows. Earlier lists '
+                                   'stay unchanged. Columns paired by position need fresh examples '
+                                   'once the page changes.'},
+ 'get-web-source-preview': {'method': 'get_web_source_preview',
+                            'arguments': ['preview_id'],
+                            'body': False,
+                            'body_required': False,
+                            'query': {},
+                            'summary': 'Read one source preview with its page hash, cell locations '
+                                       'and field explanations.'},
+ 'save-web-source-list': {'method': 'save_web_source_list',
+                          'arguments': [],
+                          'body': True,
+                          'body_required': True,
+                          'query': {},
+                          'summary': 'Save a reviewed preview as an imported list, using its '
+                                     'preview hash. Saving does not research or spend; quote and '
+                                     'approve research on the list afterward.'},
+ 'get-reconciliation-fields': {'method': 'get_reconciliation_fields',
+                               'arguments': ['collection_id'],
+                               'body': False,
+                               'body_required': False,
+                               'query': {},
+                               'summary': 'Read the fields of a list you can open that can be used '
+                                          'to match it against another list'},
+ 'list-reconciliations': {'method': 'list_reconciliations',
+                          'arguments': ['collection_id'],
+                          'body': False,
+                          'body_required': False,
+                          'query': {},
+                          'summary': 'List the recent comparisons that include this list (the '
+                                     'latest 20, kept for 30 days)'},
+ 'prepare-reconciliation': {'method': 'prepare_reconciliation',
+                            'arguments': [],
+                            'body': True,
+                            'body_required': True,
+                            'query': {},
+                            'summary': 'Compare two of your lists with exact or close-spelling '
+                                       'rules and conflict checks, and propose which rows '
+                                       'correspond'},
+ 'get-reconciliation': {'method': 'get_reconciliation',
+                        'arguments': ['comparison_id'],
+                        'body': False,
+                        'body_required': False,
+                        'query': {},
+                        'summary': 'Read a comparison: proposed pairs, alternatives, conflicts, '
+                                   'missing values and sources'},
+ 'apply-reconciliation': {'method': 'apply_reconciliation',
+                          'arguments': ['comparison_id'],
+                          'body': True,
+                          'body_required': True,
+                          'query': {},
+                          'summary': 'Fill empty cells in a new list from the pairs you chose. The '
+                                     'original lists stay unchanged'},
+ 'get-reconciled-input': {'method': 'get_reconciled_input',
+                          'arguments': ['import_id'],
+                          'body': False,
+                          'body_required': False,
+                          'query': {},
+                          'summary': 'Read which chosen pair filled each cell of a list made by '
+                                     'matching'}}

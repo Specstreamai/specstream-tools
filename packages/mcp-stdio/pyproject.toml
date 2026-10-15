@@ -1,6 +1,6 @@
 [project]
 name = "specstream-mcp-stdio"
-version = "1.2.0"
+version = "1.2.1"
 description = "Stdio proxy for the SpecStream MCP server, for Zed, Cline, and Continue. Finished lists with sources, priced before they run."
 readme = "README.md"
 requires-python = ">=3.12"
