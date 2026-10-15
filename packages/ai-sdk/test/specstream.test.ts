@@ -280,7 +280,7 @@ describe("the key", () => {
     expect(fake.calls.length).toBeGreaterThan(0);
     for (const call of fake.calls) {
       expect(call.headers.Authorization).toBe(`Bearer ${KEY}`);
-      expect(call.headers["User-Agent"]).toBe("@specstream/ai-sdk/0.1.0");
+      expect(call.headers["User-Agent"]).toBe("@specstream/ai-sdk/0.1.1");
     }
     expect(JSON.stringify(result)).not.toContain(KEY);
   });
