@@ -26,6 +26,7 @@ Your agent asks for "food banks in Texas, with their annual revenue" and gets ro
 [![n8n node](https://img.shields.io/npm/v/n8n-nodes-specstream?label=n8n%20node)](https://www.npmjs.com/package/n8n-nodes-specstream)
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-ai.specstream%2Fspecstream-blue)](https://registry.modelcontextprotocol.io/v0.1/servers?search=ai.specstream)
 [![Smithery](https://smithery.ai/badge/specstream/specstream)](https://smithery.ai/servers/specstream/specstream)
+[![Add to Replit](https://replit.com/badge?caption=Add%20to%20Replit)](https://replit.com/integrations?mcp=eyJkaXNwbGF5TmFtZSI6IlNwZWNTdHJlYW0iLCJiYXNlVXJsIjoiaHR0cHM6Ly9hcGkuc3BlY3N0cmVhbS5haS9tY3AifQ==)
 
 This repository holds what you install around SpecStream: MCP client setup, agent plugins and skills, SDKs, the n8n node, a GitHub Action, and examples. The product itself runs at [specstream.ai](https://specstream.ai). Licensed MIT.
 
@@ -246,6 +247,16 @@ Add the plugin to `opencode.json`. It adds the SpecStream server and the four sk
 ```
 
 Details and options: [`integrations/opencode`](integrations/opencode).
+
+### Replit
+
+[![Add to Replit](https://replit.com/badge?caption=Add%20to%20Replit)](https://replit.com/integrations?mcp=eyJkaXNwbGF5TmFtZSI6IlNwZWNTdHJlYW0iLCJiYXNlVXJsIjoiaHR0cHM6Ly9hcGkuc3BlY3N0cmVhbS5haS9tY3AifQ==)
+
+The button adds SpecStream to Replit Agent; you sign in when the Project Editor asks. No key goes in the link.
+
+### Any other client that takes a URL
+
+Lovable, Gumloop, Relevance AI, Lindy, Manus, Genspark and the rest: add a remote MCP server, paste `https://api.specstream.ai/mcp`, and sign in when asked. If the client only takes headers, use `Authorization: Bearer $SPECSTREAM_API_KEY`.
 
 ### n8n
 
