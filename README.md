@@ -46,6 +46,7 @@ This repository holds what you install around SpecStream: MCP client setup, agen
 | [`packages/mcp-stdio/`](packages/mcp-stdio) | `specstream-mcp-stdio`: stdio proxy for clients that only start local servers |
 | [`integrations/n8n/`](integrations/n8n) | `n8n-nodes-specstream`: n8n community node |
 | [`integrations/opencode/`](integrations/opencode) | `opencode-specstream`: OpenCode plugin (MCP server and the four skills) |
+| [`integrations/openclaw/`](integrations/openclaw) | `@specstream/openclaw-plugin`: OpenClaw plugin (find a list, read its rows, four skills) |
 | [`integrations/vscode/`](integrations/vscode) | VS Code extension: MCP sign-in and `@specstream` chat |
 | [`actions/find-action/`](actions/find-action) | GitHub Action that runs a request and uploads a CSV |
 | [`Formula/`](Formula) | Homebrew formula for the command line |

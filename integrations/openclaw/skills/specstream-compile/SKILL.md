@@ -1,5 +1,5 @@
 ---
-name: compile
+name: specstream-compile
 description: Read a plain-English request back to the person before anything runs. No price, no work.
 metadata: { "openclaw": { "requires": { "config": ["mcp.servers.specstream"] } } }
 ---

@@ -1,5 +1,5 @@
 ---
-name: review-work
+name: specstream-review-work
 description: Get the real price for the exact request. Nothing runs.
 metadata: { "openclaw": { "requires": { "config": ["mcp.servers.specstream"] } } }
 ---

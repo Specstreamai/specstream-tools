@@ -1,5 +1,5 @@
 ---
-name: approve-work
+name: specstream-approve-work
 description: Approve an exact price, up to the maximum the person set. This starts paid work.
 metadata: { "openclaw": { "requires": { "config": ["mcp.servers.specstream"] } } }
 ---

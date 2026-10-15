@@ -1,5 +1,5 @@
 ---
-name: continue-work
+name: specstream-continue-work
 description: Read the finished rows with the page behind each fact, send them where the person works, and start new work only on purpose.
 metadata: { "openclaw": { "requires": { "config": ["mcp.servers.specstream"] } } }
 ---

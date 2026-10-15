@@ -1,4 +1,4 @@
-# Publishes the n8n community node, the Activepieces piece and the OpenCode plugin
+# Publishes the n8n community node, the Activepieces piece and the OpenCode and OpenClaw plugins
 # to npm with a provenance statement.
 #
 # n8n only verifies community nodes that are published from GitHub Actions with
@@ -19,12 +19,14 @@ on:
           - n8n
           - activepieces
           - opencode
+          - openclaw
         default: n8n
   push:
     tags:
       - "n8n-v*"
       - "activepieces-v*"
       - "opencode-v*"
+      - "openclaw-v*"
 
 jobs:
   n8n:
@@ -99,6 +101,32 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm test
+      - name: Publish with provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: "true"
+        run: npm publish --access public
+
+  openclaw:
+    if: inputs.package == 'openclaw' || startsWith(github.ref, 'refs/tags/openclaw-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: integrations/openclaw
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npm run plugin:validate
       - name: Publish with provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
