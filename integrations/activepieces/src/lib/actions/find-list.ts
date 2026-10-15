@@ -39,6 +39,12 @@ export const findListAction = createAction({
         'The most this list may cost. If the price comes back higher, nothing runs and the step stops with the price. See [pricing](https://specstream.ai/pricing).',
       required: true,
     }),
+    runKey: Property.ShortText({
+      displayName: 'Run Key',
+      description:
+        'Identifies one run, 8 to 128 characters. A second request with the same key gets the run that key already started and is not charged again. To start a fresh run every time, map something unique, such as the flow run ID. If left empty, identical requests within the same UTC hour share one run, so a retry never buys the list twice.',
+      required: false,
+    }),
   },
   async run(context) {
     const apiKey = context.auth.secret_text;
@@ -49,8 +55,10 @@ export const findListAction = createAction({
     if (!Number.isSafeInteger(count) || count < 1) throw new Error('Number of Results must be 1 or more.');
     if (!Number.isSafeInteger(maxCents) || maxCents <= 0) throw new Error('Maximum Price must be more than 0.');
 
-    // A retried step in the same run recovers the list it already started instead of buying it again.
-    const requestKey = `activepieces-${context.run.id}-${context.step.name}`;
+    const given = String(context.propsValue.runKey ?? '').trim();
+    if (given && (given.length < 8 || given.length > 128)) throw new Error('Run Key must be 8 to 128 characters.');
+    // A retried step recovers the list it already started instead of buying it again.
+    const requestKey = specstreamApi.runKey({ request: q, count, maxPrice: Number(context.propsValue.maxPrice), override: given });
     const recovered = await specstreamApi
       .call<Execution>({ apiKey, method: HttpMethod.GET, path: `/v1/capacity/requests/${encodeURIComponent(requestKey)}` })
       .catch(() => undefined);

@@ -25,6 +25,7 @@ export class SpecstreamApi implements ICredentialType {
       name: "apiBase",
       type: "string",
       default: "https://api.specstream.ai",
+      description: "Keep the default. The API key is only ever sent to https://api.specstream.ai.",
     },
   ];
   authenticate: IAuthenticateGeneric = {
@@ -37,7 +38,7 @@ export class SpecstreamApi implements ICredentialType {
   };
   test: ICredentialTestRequest = {
     request: {
-      baseURL: "={{$credentials.apiBase || 'https://api.specstream.ai'}}",
+      baseURL: "https://api.specstream.ai",
       url: "/v1/me",
     },
   };

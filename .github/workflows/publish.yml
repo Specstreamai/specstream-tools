@@ -71,6 +71,7 @@ jobs:
       - run: npm install -g npm@latest
       - run: npm ci
       - run: npm run build
+      - run: npm test
       - name: Publish with provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

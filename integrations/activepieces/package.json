@@ -1,6 +1,6 @@
 {
   "name": "@specstream/piece-specstream",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "SpecStream piece for Activepieces: ask for any list in plain words and get every match from the live web, with its source.",
   "license": "MIT",
   "homepage": "https://specstream.ai/docs/integrations",
@@ -27,7 +27,8 @@
     "@activepieces/shared": "*"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "test": "tsc -p tsconfig.test.json && node --test .test-build/test/piece.test.js"
   },
   "devDependencies": {
     "typescript": "^5.6.0",

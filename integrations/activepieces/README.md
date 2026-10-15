@@ -8,9 +8,9 @@ In Activepieces, open **Platform admin → Pieces → Install piece**, choose **
 
 ## Actions
 
-- **Find a List**: reads the request, prices it, and starts it only if the price is at or below your **Maximum Price**. Returns the list ID and link.
+- **Find a List**: reads the request, prices it, and starts it only if the price is at or below your **Maximum Price**. Returns the list ID and link. Retries are safe: identical requests within the same UTC hour share one run, or set your own **Run Key**.
 - **Get List Results**: the rows of a list, each with `source_url` and `checked_at`.
-- **Custom API Call**: any endpoint on `https://api.specstream.ai`.
+- **Custom API Call**: any endpoint on `https://api.specstream.ai`, over HTTPS only.
 
 ## Triggers
 

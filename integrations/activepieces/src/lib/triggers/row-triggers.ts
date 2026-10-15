@@ -17,6 +17,19 @@ type Delivery = { id: string; event: string; find_id: string; records?: ListReco
 
 const STORE_KEY = 'specstream_webhook';
 
+// Republishing enables the trigger again: the hook stored last time goes first. A hook that is already gone is fine.
+export async function removeHook(apiKey: string, hook: Hook): Promise<void> {
+  try {
+    await specstreamApi.call<unknown>({
+      apiKey,
+      method: HttpMethod.DELETE,
+      path: `/v1/account/webhooks/${encodeURIComponent(hook.hook_id)}`,
+    });
+  } catch (e) {
+    if (!/HTTP 404/.test(String((e as Error)?.message))) throw e;
+  }
+}
+
 const sampleRow = {
   id: 'fnd_example:ent_example',
   list_id: 'fnd_example',
@@ -58,15 +71,7 @@ function rowTrigger({
     type: TriggerStrategy.WEBHOOK,
     async onEnable(context) {
       const previous = await context.store.get<Hook>(STORE_KEY);
-      if (previous) {
-        await specstreamApi
-          .call<unknown>({
-            apiKey: context.auth.secret_text,
-            method: HttpMethod.DELETE,
-            path: `/v1/account/webhooks/${encodeURIComponent(previous.hook_id)}`,
-          })
-          .catch(() => undefined);
-      }
+      if (previous) await removeHook(context.auth.secret_text, previous).catch(() => undefined);
       const hook = await specstreamApi.call<Hook>({
         apiKey: context.auth.secret_text,
         method: HttpMethod.POST,
@@ -78,11 +83,7 @@ function rowTrigger({
     async onDisable(context) {
       const hook = await context.store.get<Hook>(STORE_KEY);
       if (!hook) return;
-      await specstreamApi.call<unknown>({
-        apiKey: context.auth.secret_text,
-        method: HttpMethod.DELETE,
-        path: `/v1/account/webhooks/${encodeURIComponent(hook.hook_id)}`,
-      });
+      await removeHook(context.auth.secret_text, hook);
       await context.store.delete(STORE_KEY);
     },
     async test(context) {

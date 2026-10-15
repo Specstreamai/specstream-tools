@@ -9,12 +9,18 @@ import type {
 } from "n8n-workflow";
 import { NodeApiError, NodeConnectionTypes, NodeOperationError } from "n8n-workflow";
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { resolveBase } from "../../lib/specstream.js";
 
 type Method = "GET" | "POST" | "DELETE";
 
 async function request(context: IHookFunctions, method: Method, path: string, body?: IDataObject): Promise<IDataObject> {
   const credentials = await context.getCredentials("specstreamApi");
-  const base = String(credentials.apiBase || "https://api.specstream.ai").replace(/\/$/, "");
+  let base: string;
+  try {
+    base = resolveBase(credentials.apiBase) as string;
+  } catch (error) {
+    throw new NodeOperationError(context.getNode(), (error as Error).message);
+  }
   const response = (await context.helpers.httpRequestWithAuthentication.call(context, "specstreamApi", {
     method,
     url: base + path,
@@ -29,6 +35,16 @@ async function request(context: IHookFunctions, method: Method, path: string, bo
     });
   }
   return response.data as IDataObject;
+}
+
+// A hook that is already gone (404) is fine; any other failure stops the step so nothing is left registered unseen.
+async function removeHook(context: IHookFunctions, hookId: string): Promise<void> {
+  try {
+    await request(context, "DELETE", "/v1/account/webhooks/" + encodeURIComponent(hookId));
+  } catch (error) {
+    const text = String((error as Error).message) + String((error as { httpCode?: string }).httpCode);
+    if (!/404|not found/i.test(text)) throw new NodeOperationError(context.getNode(), error as Error);
+  }
 }
 
 export class SpecstreamTrigger implements INodeType {
@@ -67,11 +83,20 @@ export class SpecstreamTrigger implements INodeType {
       async checkExists(this: IHookFunctions): Promise<boolean> {
         const saved = this.getWorkflowStaticData("node");
         if (!saved.hook_id) return false;
+        // A changed event needs a new hook; create() removes the stored one.
+        if (saved.event !== (this.getNodeParameter("event") as string)) return false;
         const result = await request(this, "GET", "/v1/account/webhooks");
         const hooks = (result.webhooks as IDataObject[] | undefined) ?? [];
         return hooks.some((hook) => hook.hook_id === saved.hook_id && !hook.revoked_at);
       },
       async create(this: IHookFunctions): Promise<boolean> {
+        const stored = this.getWorkflowStaticData("node");
+        if (stored.hook_id) {
+          // Activating again leaves no old hook behind.
+          await removeHook(this, String(stored.hook_id));
+          delete stored.hook_id;
+          delete stored.secret;
+        }
         const result = await request(this, "POST", "/v1/account/webhooks", {
           url: this.getNodeWebhookUrl("default") as string,
           events: [this.getNodeParameter("event") as string],
@@ -79,16 +104,17 @@ export class SpecstreamTrigger implements INodeType {
         if (!result.hook_id || !result.secret) {
           throw new NodeOperationError(this.getNode(), "Webhook registration was not confirmed");
         }
-        Object.assign(this.getWorkflowStaticData("node"), result);
+        Object.assign(this.getWorkflowStaticData("node"), result, { event: this.getNodeParameter("event") as string });
         return true;
       },
       async delete(this: IHookFunctions): Promise<boolean> {
         const saved = this.getWorkflowStaticData("node");
         if (saved.hook_id) {
-          await request(this, "DELETE", "/v1/account/webhooks/" + encodeURIComponent(String(saved.hook_id)));
+          await removeHook(this, String(saved.hook_id));
         }
         delete saved.hook_id;
         delete saved.secret;
+        delete saved.event;
         return true;
       },
     },

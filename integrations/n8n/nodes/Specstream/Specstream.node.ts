@@ -9,32 +9,7 @@ import type {
 import { NodeConnectionTypes, NodeOperationError } from "n8n-workflow";
 
 import { requireConfirmMaxUsd } from "../../lib/confirm_max_usd.js";
-
-// Fields every row carries; a column with the same name is renamed so it can't overwrite them.
-const RESERVED = new Set(["id", "list_id", "list_link", "position", "source_url", "checked_at", "list_status"]);
-
-// One row as flat fields: each column's label holds what the list shows, plus the page the
-// row's first value was read from and the link to the list.
-function flattenRow(listId: string, record: IDataObject): IDataObject {
-  const row: IDataObject = {
-    id: `${listId}:${String(record.entity_id)}`,
-    list_id: listId,
-    list_link: `https://specstream.ai/workspace/collections/${listId}`,
-    position: record.ordinal as number,
-  };
-  let source: IDataObject | undefined;
-  for (const cell of (record.cells as IDataObject[] | undefined) || []) {
-    let label = String(cell.label || cell.column_id || "").trim();
-    if (!label) continue;
-    if (RESERVED.has(label)) label = `${label} (column)`;
-    row[label] = (cell.display ?? cell.value ?? "") as string;
-    const provenance = cell.provenance as IDataObject | null | undefined;
-    if (!source && provenance && provenance.source_url) source = provenance;
-  }
-  row.source_url = (source?.source_url as string) || "";
-  row.checked_at = (source?.observed_at as string) || "";
-  return row;
-}
+import { flattenRow, resolveBase, runKey } from "../../lib/specstream.js";
 
 export class Specstream implements INodeType {
   description: INodeTypeDescription = {
@@ -94,6 +69,15 @@ export class Specstream implements INodeType {
         default: 0,
         required: true,
         description: "The most this list may cost. If the price comes back higher, nothing runs and the node stops with the price.",
+        displayOptions: { show: { operation: ["findList"] } },
+      },
+      {
+        displayName: "Run Key",
+        name: "run_key",
+        type: "string",
+        default: "",
+        description:
+          "Identifies one run, 8 to 128 characters. A second request with the same key gets the run it already started and is not charged again. To start a fresh run every time, map something unique, such as the execution ID. If left empty, identical requests within the same UTC hour share one run.",
         displayOptions: { show: { operation: ["findList"] } },
       },
       {
@@ -209,7 +193,12 @@ export class Specstream implements INodeType {
     const items = this.getInputData();
     const out: INodeExecutionData[] = [];
     const credentials = await this.getCredentials("specstreamApi");
-    const base = String(credentials.apiBase || "https://api.specstream.ai").replace(/\/$/, "");
+    let base: string;
+    try {
+      base = resolveBase(credentials.apiBase) as string;
+    } catch (error) {
+      throw new NodeOperationError(this.getNode(), (error as Error).message);
+    }
 
     for (let i = 0; i < items.length; i++) {
       const operation = this.getNodeParameter("operation", i) as string;
@@ -242,8 +231,10 @@ export class Specstream implements INodeType {
         if (!q) throw fail("Describe the list to find");
         if (!Number.isSafeInteger(count) || count < 1) throw fail("Number of Results must be 1 or more");
         if (!Number.isSafeInteger(maxCents) || maxCents <= 0) throw fail("Set a Maximum Price above 0");
-        // A retried item in the same execution recovers the run it already started instead of buying the list again.
-        const requestKey = `n8n-${this.getExecutionId()}-${this.getNode().id}-${i}`;
+        const given = String(this.getNodeParameter("run_key", i, "") || "").trim();
+        if (given && (given.length < 8 || given.length > 128)) throw fail("Run Key must be 8 to 128 characters");
+        // A retry, even in a new execution, recovers the run it already started instead of buying the list again.
+        const requestKey = runKey({ request: q, count, maxPrice: Number(this.getNodeParameter("max_price_usd", i)), override: given });
         let recovered: IDataObject | undefined;
         try {
           recovered = await call("GET", `/v1/capacity/requests/${encodeURIComponent(requestKey)}`);

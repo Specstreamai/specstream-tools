@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from 'crypto';
+import { createHash, createHmac, timingSafeEqual } from 'crypto';
 import {
   HttpError,
   HttpMethod,
@@ -8,12 +8,12 @@ import {
 export const BASE_URL = 'https://api.specstream.ai';
 export const WORKSPACE_URL = 'https://specstream.ai/workspace/collections';
 
-export const specstreamApi = { call, statusOf, listLink };
+export const specstreamApi = { call, statusOf, listLink, runKey, isAllowedUrl };
 
 // Fields every row carries; a column with the same name is renamed so it can't overwrite them.
-const RESERVED = new Set(['id', 'list_id', 'list_link', 'position', 'source_url', 'checked_at']);
+const RESERVED = new Set(['id', 'list_id', 'list_link', 'position', 'source_url', 'checked_at', '__proto__']);
 const FINISHED = new Set(['completed', 'partial']);
-export const specstreamRows = { flatten, latest };
+export const specstreamRows = { flatten, latest, columnName };
 export const specstreamWebhook = { verify };
 
 async function call<T>({
@@ -56,6 +56,42 @@ async function call<T>({
   return payload.data as T;
 }
 
+// Credentials go only to https://api.specstream.ai: a path on it, or a full URL whose origin is exactly it.
+function isAllowedUrl(url: string): boolean {
+  if (url.includes('\\') || /[\u0000-\u001f]/.test(url)) return false;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(url)) {
+    try {
+      const parsed = new URL(url);
+      return parsed.origin === BASE_URL && !parsed.username && !parsed.password;
+    } catch {
+      return false;
+    }
+  }
+  return url.startsWith('/') && !url.startsWith('//');
+}
+
+// The same request, count and price within the same UTC hour share one key, so a retry after a lost
+// response reaches the list that already started instead of buying another. Output format matches the Make app.
+function runKey({
+  request,
+  count,
+  maxPrice,
+  override,
+  now = new Date(),
+}: {
+  request: string;
+  count: number;
+  maxPrice: number;
+  override?: string;
+  now?: Date;
+}): string {
+  const given = (override ?? '').trim();
+  if (given) return given;
+  const hour = now.toISOString().slice(0, 13);
+  const digest = createHash('sha256').update(`${request}|${count}|${maxPrice}|${hour}`).digest('hex');
+  return `activepieces-${digest.slice(0, 32)}`;
+}
+
 function statusOf(e: unknown): number | undefined {
   return e instanceof HttpError ? e.response.status : undefined;
 }
@@ -81,7 +117,15 @@ type Cell = {
 export type ListRecord = { entity_id: string; ordinal?: number; cells?: Cell[] };
 
 // One row as flat fields a flow can map: each column's label holds what the list shows,
-// plus the page the row's first value was read from and the link to the list.
+// plus the page the row's first value was read from and the link to the list. The built-in fields
+// always win: a column whose label is one of them, or repeats an earlier column, gets " (column)" added.
+function columnName(label: string, taken: Set<string>): string {
+  if (!RESERVED.has(label) && !taken.has(label)) return label;
+  let name = `${label} (column)`;
+  for (let n = 2; RESERVED.has(name) || taken.has(name); n++) name = `${label} (column ${n})`;
+  return name;
+}
+
 function flatten(listId: string, record: ListRecord): Record<string, unknown> {
   const row: Record<string, unknown> = {
     id: `${listId}:${record.entity_id}`,
@@ -89,12 +133,14 @@ function flatten(listId: string, record: ListRecord): Record<string, unknown> {
     list_link: listLink(listId),
     position: record.ordinal,
   };
+  const taken = new Set<string>();
   let source: Cell['provenance'] = null;
   for (const cell of record.cells ?? []) {
-    let label = String(cell.label ?? cell.column_id ?? '').trim();
+    const label = String(cell.label ?? cell.column_id ?? '').trim();
     if (!label) continue;
-    if (RESERVED.has(label)) label = `${label} (column)`;
-    row[label] = cell.display ?? cell.value ?? '';
+    const name = columnName(label, taken);
+    taken.add(name);
+    row[name] = cell.display ?? cell.value ?? '';
     if (!source && cell.provenance?.source_url) source = cell.provenance;
   }
   row['source_url'] = source?.source_url ?? '';
@@ -102,28 +148,41 @@ function flatten(listId: string, record: ListRecord): Record<string, unknown> {
   return row;
 }
 
-// The newest finished list on the account, so a trigger test shows real rows.
+type FindInfo = { find_id: string; status?: string; created_at?: string; updated_at?: string };
+
+// The newest finished list on the account (by date, not by position in a history), so a trigger test
+// shows real rows and never a list that is still running.
 async function latest(apiKey: string, limit = 3): Promise<Record<string, unknown>[]> {
   const specs = await call<{ specs: { spec_id: string }[] }>({
     apiKey,
     method: HttpMethod.GET,
     path: '/v1/specs?limit=10',
   });
+  const ids: string[] = [];
   for (const spec of specs.specs ?? []) {
     const history = await call<{ finds: { find_id: string }[] }>({
       apiKey,
       method: HttpMethod.GET,
       path: `/v1/specs/${encodeURIComponent(spec.spec_id)}/finds?limit=5`,
     });
-    for (const find of history.finds ?? []) {
-      const page = await call<{ find_id: string; status: string; rows: ListRecord[] }>({
-        apiKey,
-        method: HttpMethod.GET,
-        path: `/v1/finds/${encodeURIComponent(find.find_id)}/rows`,
-      });
-      if (FINISHED.has(page.status) && page.rows?.length) {
-        return page.rows.slice(0, limit).map((record) => flatten(page.find_id, record));
-      }
+    for (const find of history.finds ?? []) if (!ids.includes(find.find_id)) ids.push(find.find_id);
+  }
+  const finds: FindInfo[] = [];
+  for (const id of ids) {
+    finds.push(
+      await call<FindInfo>({ apiKey, method: HttpMethod.GET, path: `/v1/finds/${encodeURIComponent(id)}` }),
+    );
+  }
+  const dateOf = (find: FindInfo) => Date.parse(find.updated_at ?? find.created_at ?? '') || 0;
+  const finished = finds.filter((find) => FINISHED.has(String(find.status))).sort((x, y) => dateOf(y) - dateOf(x));
+  for (const find of finished) {
+    const page = await call<{ find_id: string; status: string; rows: ListRecord[] }>({
+      apiKey,
+      method: HttpMethod.GET,
+      path: `/v1/finds/${encodeURIComponent(find.find_id)}/rows`,
+    });
+    if (FINISHED.has(page.status) && page.rows?.length) {
+      return page.rows.slice(0, limit).map((record) => flatten(page.find_id, record));
     }
   }
   return [];

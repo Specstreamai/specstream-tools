@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-specstream",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "SpecStream for n8n: ask for a list in plain words and pass every match, with its source, to the next node. Priced before it runs.",
   "license": "MIT",
   "homepage": "https://specstream.ai/docs/integrations",
@@ -32,7 +32,7 @@
     "dev": "n8n-node dev",
     "lint": "n8n-node lint",
     "lint:fix": "n8n-node lint --fix",
-    "test": "node test/confirm_max_usd.test.js",
+    "test": "n8n-node build && node test/confirm_max_usd.test.js && node test/specstream.test.js && node test/trigger.test.js",
     "prepublishOnly": "n8n-node prerelease",
     "release": "n8n-node release"
   },

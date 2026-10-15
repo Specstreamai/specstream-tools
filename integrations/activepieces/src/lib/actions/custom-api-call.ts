@@ -1,15 +1,15 @@
 import { createAction } from '@activepieces/pieces-framework';
 import { createCustomApiCallAction } from '@activepieces/pieces-common';
 import { specstreamAuth } from '../auth';
-import { BASE_URL } from '../common/client';
+import { BASE_URL, specstreamApi } from '../common/client';
 
 const baseAction = createCustomApiCallAction({
   auth: specstreamAuth,
   baseUrl: () => BASE_URL,
   authMapping: async (auth, propsValue) => {
     const url = propsValue['url']?.['url'];
-    if (typeof url === 'string' && /^[a-z][a-z0-9+.-]*:/i.test(url) && new URL(url).origin !== new URL(BASE_URL).origin) {
-      throw new Error(`Custom API calls go to ${BASE_URL} only, so your API key never reaches another host.`);
+    if (typeof url !== 'string' || !specstreamApi.isAllowedUrl(url)) {
+      throw new Error(`Custom API calls go to ${BASE_URL} only (a path like /v1/me, or a full https URL on that host), so your API key is never sent anywhere else or without encryption.`);
     }
     if (propsValue['followRedirects'] === true) {
       throw new Error('Follow redirects is not supported for SpecStream: a redirect could carry your API key to another host.');
