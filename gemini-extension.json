@@ -1,6 +1,6 @@
 {
   "name": "specstream",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "SpecStream, the live web data engine for teams and agents: ask for any list in plain words and get every match from the live web, with its source.",
   "mcpServers": {
     "specstream": {
