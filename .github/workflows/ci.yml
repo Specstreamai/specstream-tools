@@ -40,6 +40,13 @@ jobs:
           python -m pip install "crewai>=1.0,<2" pytest build
           PYTHONPATH=. python -m pytest -q
           python -m build
+      - name: Haystack package tests
+        working-directory: packages/specstream-haystack
+        run: |
+          python -m pip install "haystack-ai>=2.14" docstring-parser pytest ruff build
+          python -m ruff check .
+          python -m pytest -q
+          python -m build
       - name: stdio proxy builds
         working-directory: packages/mcp-stdio
         run: python -m build
@@ -66,6 +73,12 @@ jobs:
           npm test
           npm run typecheck
           npm run build
+      - name: OpenCode plugin check and test
+        working-directory: integrations/opencode
+        run: |
+          npm ci
+          npm run check
+          npm test
       - name: n8n node lint, build and test
         working-directory: integrations/n8n
         run: |

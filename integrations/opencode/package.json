@@ -1,0 +1,53 @@
+{
+  "name": "opencode-specstream",
+  "version": "0.1.0",
+  "description": "SpecStream plugin for OpenCode: adds the SpecStream MCP server and four agent skills, so your agent can ask for a list in plain words and get every matching row with its source.",
+  "type": "module",
+  "main": "index.ts",
+  "files": [
+    "index.ts",
+    "v1.ts",
+    "v2.ts",
+    "shared.ts",
+    "skills",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "specstream",
+    "mcp",
+    "lead-lists",
+    "web-data",
+    "web-search",
+    "agent-skills"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Specstreamai/specstream-tools.git",
+    "directory": "integrations/opencode"
+  },
+  "homepage": "https://specstream.ai/docs/mcp",
+  "author": {
+    "name": "SpecStream",
+    "url": "https://specstream.ai"
+  },
+  "engines": {
+    "opencode": "^1.18.29 || ^2.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test test/plugin.test.ts"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.18.34",
+    "@opencode/plugin": "^2.0.23",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}

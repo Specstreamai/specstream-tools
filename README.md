@@ -41,9 +41,11 @@ This repository holds what you install around SpecStream: MCP client setup, agen
 | [`packages/langchain-specstream/`](packages/langchain-specstream) | `langchain-specstream`: LangChain tools and a retriever |
 | [`packages/llama-index-tools-specstream/`](packages/llama-index-tools-specstream) | `llama-index-tools-specstream`: LlamaIndex tool spec and a retriever |
 | [`packages/crewai-specstream/`](packages/crewai-specstream) | `crewai-specstream`: CrewAI tools |
+| [`packages/specstream-haystack/`](packages/specstream-haystack) | `specstream-haystack`: Haystack list fetcher component and agent tool |
 | [`packages/ai-sdk/`](packages/ai-sdk) | `@specstream/ai-sdk`: Vercel AI SDK tools |
 | [`packages/mcp-stdio/`](packages/mcp-stdio) | `specstream-mcp-stdio`: stdio proxy for clients that only start local servers |
 | [`integrations/n8n/`](integrations/n8n) | `n8n-nodes-specstream`: n8n community node |
+| [`integrations/opencode/`](integrations/opencode) | `opencode-specstream`: OpenCode plugin (MCP server and the four skills) |
 | [`integrations/vscode/`](integrations/vscode) | VS Code extension: MCP sign-in and `@specstream` chat |
 | [`actions/find-action/`](actions/find-action) | GitHub Action that runs a request and uploads a CSV |
 | [`Formula/`](Formula) | Homebrew formula for the command line |
@@ -227,6 +229,19 @@ Or in `~/.gemini/settings.json`:
   }
 }
 ```
+
+### OpenCode
+
+Add the plugin to `opencode.json`. It adds the SpecStream server and the four skills, and `opencode mcp auth specstream` signs you in through your browser:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["opencode-specstream"]
+}
+```
+
+Details and options: [`integrations/opencode`](integrations/opencode).
 
 ### n8n
 

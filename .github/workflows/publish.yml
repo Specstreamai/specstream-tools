@@ -1,5 +1,5 @@
-# Publishes the n8n community node and the Activepieces piece to npm with a
-# provenance statement.
+# Publishes the n8n community node, the Activepieces piece and the OpenCode plugin
+# to npm with a provenance statement.
 #
 # n8n only verifies community nodes that are published from GitHub Actions with
 # provenance. The workflow file must be named publish.yml if you set up an npm
@@ -18,11 +18,13 @@ on:
         options:
           - n8n
           - activepieces
+          - opencode
         default: n8n
   push:
     tags:
       - "n8n-v*"
       - "activepieces-v*"
+      - "opencode-v*"
 
 jobs:
   n8n:
@@ -71,6 +73,31 @@ jobs:
       - run: npm install -g npm@latest
       - run: npm ci
       - run: npm run build
+      - run: npm test
+      - name: Publish with provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: "true"
+        run: npm publish --access public
+
+  opencode:
+    if: inputs.package == 'opencode' || startsWith(github.ref, 'refs/tags/opencode-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: integrations/opencode
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run check
       - run: npm test
       - name: Publish with provenance
         env:

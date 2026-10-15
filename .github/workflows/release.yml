@@ -22,6 +22,7 @@ on:
           - langchain
           - llamaindex
           - crewai
+          - haystack
           - ai-sdk
 
 jobs:
@@ -49,11 +50,11 @@ jobs:
         run: npm publish --access public --provenance
 
   pypi:
-    if: ${{ contains(fromJSON('["sdk-py","mcp-stdio","langchain","llamaindex","crewai"]'), inputs.package) }}
+    if: ${{ contains(fromJSON('["sdk-py","mcp-stdio","langchain","llamaindex","crewai","haystack"]'), inputs.package) }}
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ fromJSON('{"sdk-py":"packages/sdk-py","mcp-stdio":"packages/mcp-stdio","langchain":"packages/langchain-specstream","llamaindex":"packages/llama-index-tools-specstream","crewai":"packages/crewai-specstream"}')[inputs.package] }}
+        working-directory: ${{ fromJSON('{"sdk-py":"packages/sdk-py","mcp-stdio":"packages/mcp-stdio","langchain":"packages/langchain-specstream","llamaindex":"packages/llama-index-tools-specstream","crewai":"packages/crewai-specstream","haystack":"packages/specstream-haystack"}')[inputs.package] }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

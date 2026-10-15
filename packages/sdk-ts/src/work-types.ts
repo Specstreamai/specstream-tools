@@ -1,4 +1,4 @@
-// Generated from implemented public OpenAPI sha256:4f02c0e07dab26a7f670ee19f5e20ba958c6a26df85c4d4f78b06a44da20f749; run packages/generate_clients.py.
+// Generated from implemented public OpenAPI sha256:b47c5bca5701cf3dfd1f915d2c64d4d25079abe102d018339f079abf4ff6a39a; run packages/generate_clients.py.
 export interface Schemas {
   "AcceptedRow": { "target_evidence"?: ({ [key: string]: unknown; } | null); "worded_evidence"?: ({ [key: string]: unknown; } | null); "lineage"?: (Schemas["MatchLineage"] | null); "spec_version"?: "accepted_row.v1"; "entity_id": string; "ordinal": number; "cells": Array<Schemas["RowCell"]>; "predicates": Array<Schemas["PredicateEvidence"]>; "match_proof"?: (Schemas["LogicalProof"] | null); "billable": boolean; "contact_visibility": Schemas["ContactVisibility"]; "locked"?: boolean; "details"?: Array<Schemas["RowCell"]>; };
   "AccountData": { "account_id": string; "email": string; "finds": Array<Schemas["Find"]>; };
@@ -141,7 +141,7 @@ export interface Schemas {
   "MatchExpression": ({ "op": "all" | "any" | "not"; "clauses": Array<(Schemas["Predicate"] | Schemas["MatchExpression"])>; } & (unknown));
   "MatchLineage": { "find_id": string; "entity_id": string; "relation"?: "same_public_object"; };
   "McpData": { "mcp"?: boolean; "transport"?: "streamable-http"; };
-  "MeData": { "account_id"?: (string | null); "guest": boolean; "spend_ceiling_cents"?: number; "amount_spent_cents"?: number; "remaining_spend_cents"?: number; "authorization_available"?: boolean; "remaining_spend_kind"?: "delegated_authorization_ceiling"; };
+  "MeData": { "account_id"?: (string | null); "email"?: (string | null); "guest": boolean; "spend_ceiling_cents"?: number; "amount_spent_cents"?: number; "remaining_spend_cents"?: number; "authorization_available"?: boolean; "remaining_spend_kind"?: "delegated_authorization_ceiling"; };
   "MemberExpression": ({ "op": "all" | "any" | "not"; "clauses": Array<(Schemas["MemberPredicate"] | Schemas["MemberExpression"])>; } & (unknown));
   "MemberPage": { "members": Array<Schemas["ProjectMember"]>; "next_cursor"?: (string | null); };
   "MemberPredicate": ({ "field_id": string; "op": Schemas["PredicateOp"]; "value": (boolean | number | string | Array<string> | null); } & (unknown));
