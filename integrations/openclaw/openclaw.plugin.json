@@ -1,0 +1,80 @@
+{
+  "id": "specstream",
+  "name": "SpecStream",
+  "description": "Ask for any list in plain words and get every matching row from the live web, each with its source page, priced per match.",
+  "categories": [
+    "data-analytics"
+  ],
+  "version": "0.1.0",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "apiKey": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "patternProperties": {
+              "^.*$": {}
+            }
+          }
+        ],
+        "description": "SpecStream API key, or a SecretRef. Falls back to the SPECSTREAM_API_KEY environment variable."
+      },
+      "maxPriceUsd": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "description": "The most one list may cost, in US dollars. Defaults to 5. The model can lower it per call and never raise it."
+      },
+      "waitSeconds": {
+        "type": "integer",
+        "minimum": 10,
+        "maximum": 900,
+        "description": "How long specstream_find_list waits for a running list. Defaults to 300."
+      }
+    },
+    "additionalProperties": false
+  },
+  "activation": {
+    "onStartup": false
+  },
+  "skills": [
+    "./skills"
+  ],
+  "uiHints": {
+    "apiKey": {
+      "label": "SpecStream API key",
+      "help": "Create a key under Agents & API in your SpecStream workspace. Falls back to the SPECSTREAM_API_KEY environment variable.",
+      "sensitive": true,
+      "placeholder": "ss_live_..."
+    },
+    "maxPriceUsd": {
+      "label": "Price ceiling per list (USD)",
+      "help": "A list runs only if its quoted maximum is at or below this. The model can lower it per call and never raise it. Default 5."
+    },
+    "waitSeconds": {
+      "label": "Wait for a running list (seconds)",
+      "help": "How long a find waits before returning the rows so far. Default 300.",
+      "advanced": true
+    }
+  },
+  "configContracts": {
+    "secretInputs": {
+      "paths": [
+        {
+          "path": "apiKey",
+          "expected": "string",
+          "ownerKind": "capability"
+        }
+      ]
+    }
+  },
+  "contracts": {
+    "tools": [
+      "specstream_find_list",
+      "specstream_get_list_rows"
+    ]
+  }
+}

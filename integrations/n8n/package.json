@@ -1,7 +1,7 @@
 {
   "name": "n8n-nodes-specstream",
-  "version": "1.1.1",
-  "description": "SpecStream for n8n: ask for a list in plain words and pass every match, with its source, to the next node. Priced before it runs.",
+  "version": "1.1.2",
+  "description": "Build lead lists from the live web in n8n: local businesses, companies, grants and jobs, each row with its source. Send them to Google Sheets, HubSpot or Slack. Pay per match.",
   "license": "MIT",
   "homepage": "https://specstream.ai/docs/integrations",
   "keywords": [
@@ -12,7 +12,15 @@
     "lead-lists",
     "enrichment",
     "monitoring",
-    "mcp"
+    "mcp",
+    "lead-generation",
+    "lead-list",
+    "google-maps-leads",
+    "b2b-leads",
+    "local-business",
+    "grants",
+    "company-list",
+    "google-sheets"
   ],
   "author": {
     "name": "SpecStream",

@@ -1,7 +1,7 @@
 [project]
 name = "specstream-mcp-stdio"
-version = "1.2.1"
-description = "Stdio proxy for the SpecStream MCP server, for Zed, Cline, and Continue. Finished lists with sources, priced before they run."
+version = "1.2.2"
+description = "Stdio bridge to SpecStream's MCP server: lead lists, company lists and grants from the live web for your agent."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
@@ -15,6 +15,10 @@ keywords = [
   "proxy",
   "ai-agents",
   "web-data",
+  "lead-generation",
+  "lead-list",
+  "company-list",
+  "grants",
 ]
 classifiers = [
   "Development Status :: 5 - Production/Stable",

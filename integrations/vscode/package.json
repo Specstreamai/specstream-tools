@@ -1,8 +1,8 @@
 {
   "name": "specstream",
-  "displayName": "SpecStream",
-  "description": "Give your agent finished lists from the live web. One plain-English request returns every match, each with its source.",
-  "version": "0.1.4",
+  "displayName": "SpecStream: lead lists and web data for agents",
+  "description": "Ask Copilot or your agent for a lead list, a company list or open grants. Every match comes from the live web, with its source. Pay per match.",
+  "version": "0.1.5",
   "publisher": "specstream",
   "license": "MIT",
   "homepage": "https://specstream.ai",
@@ -24,7 +24,12 @@
     "web data",
     "agent",
     "chat participant",
-    "live web"
+    "live web",
+    "lead generation",
+    "lead list",
+    "google maps leads",
+    "grants",
+    "company list"
   ],
   "engines": {
     "vscode": "^1.101.0"

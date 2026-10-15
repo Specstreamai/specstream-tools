@@ -1,7 +1,7 @@
 {
   "name": "@specstream/ai-sdk",
-  "version": "0.1.1",
-  "description": "Give a Vercel AI SDK agent any list from the live web: every matching row with the page it was read from, priced per match before anything runs.",
+  "version": "0.1.2",
+  "description": "Give a Vercel AI SDK agent lead lists, company lists and grants from the live web. Every row comes with its source, priced per match.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -1,14 +1,14 @@
 [project]
 name = "crewai-specstream"
-version = "0.1.1"
-description = "Give a CrewAI agent any list from the live web: ask in plain words, get every matching row with the page it came from, within a price you set in code."
+version = "0.1.2"
+description = "Give a CrewAI agent lead lists, company lists and grants from the live web. Every row comes with its source, priced per match in code."
 readme = "README.md"
 requires-python = ">=3.10,<3.14"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "SpecStream", email = "support@specstream.ai" }]
 maintainers = [{ name = "SpecStream", email = "support@specstream.ai" }]
-keywords = ["crewai", "crewai-tools", "specstream", "agents", "tools", "web-data", "live-web", "lead-lists", "research"]
+keywords = ["crewai", "crewai-tools", "specstream", "agents", "tools", "web-data", "live-web", "lead-lists", "research", "lead-generation", "lead-list", "company-list", "grants"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",

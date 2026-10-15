@@ -1,0 +1,69 @@
+{
+  "name": "@specstream/openclaw-plugin",
+  "version": "0.1.0",
+  "description": "SpecStream plugin for OpenClaw: ask for any list in plain words and get every matching row from the live web, each with its source page, priced per match.",
+  "type": "module",
+  "files": [
+    "dist",
+    "skills",
+    "assets",
+    "openclaw.plugin.json",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "specstream",
+    "lead-lists",
+    "web-data",
+    "live-web",
+    "agent-tools",
+    "mcp"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Specstreamai/specstream-tools.git",
+    "directory": "integrations/openclaw"
+  },
+  "homepage": "https://specstream.ai/docs/mcp",
+  "author": {
+    "name": "SpecStream",
+    "url": "https://specstream.ai"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.test.json",
+    "test": "vitest run",
+    "plugin:build": "npm run build && openclaw plugins build --entry ./dist/index.js",
+    "plugin:validate": "npm run build && openclaw plugins validate --entry ./dist/index.js",
+    "prepack": "npm run plugin:build"
+  },
+  "dependencies": {
+    "typebox": "1.3.34"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.10.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "openclaw": "2026.10.3",
+    "typescript": "5.9.3",
+    "vitest": "^3.2.0"
+  },
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "compat": {
+      "pluginApi": ">=2026.10.3"
+    },
+    "build": {
+      "openclawVersion": "2026.10.3"
+    }
+  }
+}

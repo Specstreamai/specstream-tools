@@ -15,7 +15,7 @@ from specstream_client.authorization import require_work_authorization
 from specstream_client.families import FAMILIES
 
 DEFAULT_BASE_URL = "https://api.specstream.ai"
-USER_AGENT = "specstream-python/1.1.0"
+USER_AGENT = "specstream-python/1.1.1"
 
 OpenFn = Callable[[urllib.request.Request, float], Any]
 

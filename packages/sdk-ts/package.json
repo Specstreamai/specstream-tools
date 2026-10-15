@@ -1,7 +1,7 @@
 {
   "name": "@specstream/sdk",
-  "version": "1.1.0",
-  "description": "TypeScript client for SpecStream: finished lists from the live web, every row with its source, priced before anything runs.",
+  "version": "1.1.1",
+  "description": "TypeScript client for building lead lists and company lists from the live web. Every match comes with its source, priced before it runs.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

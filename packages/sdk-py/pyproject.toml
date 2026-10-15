@@ -1,7 +1,7 @@
 [project]
 name = "specstream-client"
-version = "1.1.0"
-description = "Python client and command line for SpecStream: ask for any list in plain words and get every match with its source, priced before anything runs."
+version = "1.1.1"
+description = "Python client for building lead lists and company lists from the live web. Every match comes with its source, priced before it runs."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
@@ -17,6 +17,10 @@ keywords = [
   "mcp",
   "ai-agents",
   "api-client",
+  "lead-generation",
+  "lead-list",
+  "company-list",
+  "grants",
 ]
 classifiers = [
   "Development Status :: 5 - Production/Stable",

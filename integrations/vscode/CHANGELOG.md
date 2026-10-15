@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5
+
+- New listing text: lead lists, company lists and grants from the live web, with their sources.
+
 ## 0.1.4
 
 - First release on the VS Code Marketplace and Open VSX.
