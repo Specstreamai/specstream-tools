@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "specstream",
+  "version": "1.2.0",
+  "description": "SpecStream for Hermes: ask for a list in plain words and get every match with the page behind each fact. You see the price first and approve it; you pay only for matches.",
+  "author": {
+    "name": "SpecStream",
+    "email": "support@specstream.ai",
+    "url": "https://specstream.ai"
+  },
+  "homepage": "https://specstream.ai",
+  "repository": "https://github.com/Specstreamai/specstream-tools",
+  "license": "MIT",
+  "keywords": ["specstream", "mcp", "web-data", "lists", "lead-generation", "sources"],
+  "extensions": {
+    "com.nousresearch.hermes": {
+      "servers": {
+        "specstream": { "trust": "untrusted" }
+      }
+    }
+  }
+}
