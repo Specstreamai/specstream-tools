@@ -85,7 +85,7 @@ claude mcp add --transport http specstream https://api.specstream.ai/mcp \
 Or install the plugin, which adds the server and the four skills. It signs you in through your browser the first time, so no key is needed:
 
 ```sh
-/plugin marketplace add Specstreamai/specstream-tools
+/plugin marketplace add specstream/specstream-tools
 /plugin install specstream@specstream
 ```
 
@@ -211,7 +211,7 @@ Start Zed and Cline from a shell where `SPECSTREAM_API_KEY` is set. Agents insta
 Install the extension (the MCP server plus instructions to show the price and wait for a yes):
 
 ```sh
-gemini extensions install https://github.com/Specstreamai/specstream-tools
+gemini extensions install https://github.com/specstream/specstream-tools
 ```
 
 Or add only the server:
@@ -377,7 +377,7 @@ The four skills in [`skills/`](skills) teach an agent this order and where to st
 ```sh
 pip install specstream-client        # Python 3.12+, import specstream_client, command: specstream
 npm install @specstream/sdk          # Node 22+
-brew tap specstreamai/specstream-tools https://github.com/Specstreamai/specstream-tools
+brew tap specstream/specstream-tools https://github.com/specstream/specstream-tools
 brew install specstream              # the command line
 ```
 
@@ -406,7 +406,7 @@ Working scripts that run a request end to end are in [`examples/python-sdk`](exa
 ### GitHub Action
 
 ```yaml
-- uses: Specstreamai/specstream-tools/actions/find-action@v1
+- uses: specstream/specstream-tools/actions/find-action@v1
   with:
     request: Open tenders on SAM.gov for translation services with a deadline after November 1. Include the buyer and the estimated value.
     api_key: ${{ secrets.SPECSTREAM_API_KEY }}

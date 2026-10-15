@@ -13,7 +13,7 @@ This is a portable [Agent Plugins v1](https://agent-plugins.org) package for [He
 ### Option 1: the plugin (MCP server and skills)
 
 ```bash
-hermes plugins install Specstreamai/specstream-tools --no-enable
+hermes plugins install specstream/specstream-tools --no-enable
 hermes plugins enable specstream
 hermes gateway restart   # only if you run the messaging gateway
 ```

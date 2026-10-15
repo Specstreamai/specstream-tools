@@ -2,7 +2,7 @@
 
 ## Report a vulnerability
 
-Use [private vulnerability reporting](https://github.com/Specstreamai/specstream-tools/security/advisories/new) on this repository, or write to support@specstream.ai with "Security" in the subject. Please do not open a public issue for a vulnerability.
+Use [private vulnerability reporting](https://github.com/specstream/specstream-tools/security/advisories/new) on this repository, or write to support@specstream.ai with "Security" in the subject. Please do not open a public issue for a vulnerability.
 
 Include what you found, the steps to reproduce it, and the package or file involved. We reply, and we tell you when it is fixed.
 

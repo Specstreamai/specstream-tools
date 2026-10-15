@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Install with:
-#   brew tap specstreamai/specstream-tools https://github.com/Specstreamai/specstream-tools
+#   brew tap specstream/specstream-tools https://github.com/specstream/specstream-tools
 #   brew install specstream
 #
 # The url and sha256 are the wheel on PyPI. After each release they are updated from

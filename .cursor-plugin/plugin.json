@@ -7,7 +7,7 @@
     "email": "support@specstream.ai"
   },
   "homepage": "https://specstream.ai",
-  "repository": "https://github.com/Specstreamai/specstream-tools",
+  "repository": "https://github.com/specstream/specstream-tools",
   "license": "MIT",
   "keywords": [
     "web-data",

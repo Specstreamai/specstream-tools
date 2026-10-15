@@ -7,7 +7,7 @@ https://api.specstream.ai/mcp and signs you in with your SpecStream account.
 
 Add it to Codex from this repository:
 
-    codex plugin marketplace add Specstreamai/specstream-tools
+    codex plugin marketplace add specstream/specstream-tools
 
 Then open /plugins in Codex, choose SpecStream and sign in. In ChatGPT, type @SpecStream
 in a Work chat once the plugin is installed.

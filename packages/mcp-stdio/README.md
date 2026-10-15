@@ -60,4 +60,4 @@ The proxy needs the endpoint and a valid key. If it cannot connect, check the cl
 
 Protocol messages use stdin and stdout; diagnostics use stderr. The proxy keeps the negotiated HTTP session and does not follow redirects with credentials.
 
-Source and issues: [github.com/Specstreamai/specstream-tools](https://github.com/Specstreamai/specstream-tools). MIT license.
+Source and issues: [github.com/specstream/specstream-tools](https://github.com/specstream/specstream-tools). MIT license.

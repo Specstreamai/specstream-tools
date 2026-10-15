@@ -49,11 +49,11 @@
   "homepage": "https://specstream.ai/docs/sdk",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Specstreamai/specstream-tools.git",
+    "url": "git+https://github.com/specstream/specstream-tools.git",
     "directory": "packages/sdk-ts"
   },
   "bugs": {
-    "url": "https://github.com/Specstreamai/specstream-tools/issues"
+    "url": "https://github.com/specstream/specstream-tools/issues"
   },
   "publishConfig": {
     "access": "public"

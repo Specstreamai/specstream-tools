@@ -11,7 +11,7 @@ jobs:
   find:
     runs-on: ubuntu-latest
     steps:
-      - uses: Specstreamai/specstream-tools/actions/find-action@v1
+      - uses: specstream/specstream-tools/actions/find-action@v1
         with:
           request: >
             Open tenders on SAM.gov for translation services with a deadline after

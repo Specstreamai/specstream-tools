@@ -4,7 +4,7 @@ Ask for any list in plain words and get the whole list from the live web: lead l
 
 [SpecStream](https://specstream.ai) is the live web data engine for teams and agents. This plugin connects Grok Build to SpecStream's hosted MCP server and adds four skills for the flow: read the request back, get the price, approve it, read and send the rows.
 
-Published by SpecStream, the vendor. Source: [Specstreamai/specstream-tools](https://github.com/Specstreamai/specstream-tools), folder `plugins/grok`.
+Published by SpecStream, the vendor. Source: [specstream/specstream-tools](https://github.com/specstream/specstream-tools), folder `plugins/grok`.
 
 ## Installation
 

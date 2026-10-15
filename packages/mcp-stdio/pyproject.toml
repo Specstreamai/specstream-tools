@@ -36,8 +36,8 @@ dependencies = []
 [project.urls]
 Homepage = "https://specstream.ai"
 Documentation = "https://specstream.ai/docs/mcp"
-Repository = "https://github.com/Specstreamai/specstream-tools"
-Issues = "https://github.com/Specstreamai/specstream-tools/issues"
+Repository = "https://github.com/specstream/specstream-tools"
+Issues = "https://github.com/specstream/specstream-tools/issues"
 
 [project.scripts]
 specstream-mcp-stdio = "specstream_mcp_stdio.proxy:main"

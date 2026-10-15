@@ -60,11 +60,11 @@
   "homepage": "https://specstream.ai/docs/vercel-ai-sdk",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Specstreamai/specstream-tools.git",
+    "url": "git+https://github.com/specstream/specstream-tools.git",
     "directory": "packages/ai-sdk"
   },
   "bugs": {
-    "url": "https://github.com/Specstreamai/specstream-tools/issues"
+    "url": "https://github.com/specstream/specstream-tools/issues"
   },
   "publishConfig": {
     "access": "public"

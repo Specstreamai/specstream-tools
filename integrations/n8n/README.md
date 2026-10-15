@@ -48,4 +48,4 @@ npm run lint
 npm test
 ```
 
-The package is published from GitHub Actions with provenance, as n8n requires. Source and issues: [github.com/Specstreamai/specstream-tools](https://github.com/Specstreamai/specstream-tools). MIT license.
+The package is published from GitHub Actions with provenance, as n8n requires. Source and issues: [github.com/specstream/specstream-tools](https://github.com/specstream/specstream-tools). MIT license.

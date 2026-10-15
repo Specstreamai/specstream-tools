@@ -2,7 +2,7 @@
 
 SpecStream is the live web data engine for teams and agents. Describe a list in plain words, for example "roofing companies in Columbus, Ohio with their website and phone", and get every matching row from the live web, each with the page it was read from. The price is shown before anything runs, and you pay only for rows that match.
 
-Source: https://github.com/Specstreamai/specstream-tools/tree/main/integrations/dify
+Source: https://github.com/specstream/specstream-tools/tree/main/integrations/dify
 
 ## Setup
 

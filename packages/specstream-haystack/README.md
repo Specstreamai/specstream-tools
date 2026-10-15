@@ -47,4 +47,4 @@ The agent writes the request and picks how many rows. You decide what one list m
 
 The same request with the same limits, in the same hour, reaches the run it already started instead of starting another. A retried step never pays for the list twice.
 
-MIT licensed. Source: [Specstreamai/specstream-tools](https://github.com/Specstreamai/specstream-tools/tree/main/packages/specstream-haystack).
+MIT licensed. Source: [specstream/specstream-tools](https://github.com/specstream/specstream-tools/tree/main/packages/specstream-haystack).

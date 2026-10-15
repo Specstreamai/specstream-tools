@@ -41,8 +41,8 @@ Homepage = "https://specstream.ai"
 Documentation = "https://specstream.ai/docs/sdk"
 API = "https://api.specstream.ai"
 Changelog = "https://specstream.ai/changelog"
-Repository = "https://github.com/Specstreamai/specstream-tools"
-Issues = "https://github.com/Specstreamai/specstream-tools/issues"
+Repository = "https://github.com/specstream/specstream-tools"
+Issues = "https://github.com/specstream/specstream-tools/issues"
 
 [project.scripts]
 specstream = "specstream_client.cli:main"

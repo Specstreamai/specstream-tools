@@ -64,7 +64,7 @@ New accounts start with $10 of work for 30 days, no card. A delivered result cos
 ## Links
 
 - [SDK docs](https://specstream.ai/docs/sdk) and [API docs](https://specstream.ai/docs/api)
-- [Source and issues](https://github.com/Specstreamai/specstream-tools)
+- [Source and issues](https://github.com/specstream/specstream-tools)
 - [Python client](https://pypi.org/project/specstream-client/)
 - Support: support@specstream.ai
 

@@ -6,7 +6,7 @@
   "homepage": "https://specstream.ai/docs/integrations",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Specstreamai/specstream-tools.git",
+    "url": "git+https://github.com/specstream/specstream-tools.git",
     "directory": "integrations/activepieces"
   },
   "main": "./dist/src/index.js",

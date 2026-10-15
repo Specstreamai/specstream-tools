@@ -31,8 +31,8 @@ test = ["pytest>=8"]
 [project.urls]
 Homepage = "https://specstream.ai"
 Documentation = "https://specstream.ai/docs/crewai"
-Repository = "https://github.com/Specstreamai/specstream-tools/tree/main/packages/crewai-specstream"
-Issues = "https://github.com/Specstreamai/specstream-tools/issues"
+Repository = "https://github.com/specstream/specstream-tools/tree/main/packages/crewai-specstream"
+Issues = "https://github.com/specstream/specstream-tools/issues"
 Pricing = "https://specstream.ai/pricing"
 
 [build-system]
