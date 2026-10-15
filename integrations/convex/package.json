@@ -1,0 +1,100 @@
+{
+  "name": "@specstream/convex",
+  "version": "0.1.0",
+  "description": "SpecStream component for Convex: ask for a list in plain words, approve the price in your code, and get every row with the page behind it, kept in your database.",
+  "keywords": [
+    "convex",
+    "component",
+    "specstream",
+    "web-data",
+    "lead-lists",
+    "live-web",
+    "ai-agents",
+    "enrichment"
+  ],
+  "homepage": "https://specstream.ai/docs/sdk",
+  "bugs": {
+    "url": "https://github.com/specstream/specstream-tools/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specstream/specstream-tools.git",
+    "directory": "integrations/convex"
+  },
+  "author": {
+    "name": "SpecStream",
+    "email": "support@specstream.ai",
+    "url": "https://specstream.ai"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js"
+    },
+    "./test": "./src/test.ts",
+    "./_generated/component.js": {
+      "types": "./dist/component/_generated/component.d.ts"
+    },
+    "./_generated/component": {
+      "types": "./dist/component/_generated/component.d.ts"
+    },
+    "./convex.config.js": {
+      "types": "./dist/component/convex.config.d.ts",
+      "default": "./dist/component/convex.config.js"
+    },
+    "./convex.config": {
+      "types": "./dist/component/convex.config.d.ts",
+      "default": "./dist/component/convex.config.js"
+    }
+  },
+  "main": "./dist/client/index.js",
+  "module": "./dist/client/index.js",
+  "types": "./dist/client/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "convex dev --start 'npm run dev:build'",
+    "dev:build": "chokidar 'tsconfig*.json' 'src/**/*.ts' -i '**/*.test.ts' -c 'npm run build:codegen' --initial",
+    "dev:mock": "node example/mock-specstream.mjs",
+    "predev": "convex init && npm run build:codegen",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "build": "tsc --project ./tsconfig.build.json",
+    "build:codegen": "npx convex codegen --component-dir ./src/component && npm run build",
+    "build:clean": "npm run clean && npm run build",
+    "typecheck": "tsc --noEmit && tsc -p example && tsc -p example/convex",
+    "lint": "eslint .",
+    "test": "vitest run --typecheck",
+    "test:watch": "vitest --typecheck --clearScreen false",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run clean && npm run build",
+    "verify": "npm run build && npm run test && npm run typecheck && npm run lint"
+  },
+  "devDependencies": {
+    "@convex-dev/eslint-plugin": "^2.0.0",
+    "@edge-runtime/vm": "^5.0.0",
+    "@eslint/js": "9.39.4",
+    "@types/node": "^24.12.2",
+    "chokidar-cli": "3.0.0",
+    "convex": "1.43.0",
+    "convex-test": "0.0.55",
+    "eslint": "9.39.4",
+    "globals": "^17.5.0",
+    "prettier": "3.8.3",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.58.2",
+    "vitest": "4.1.4"
+  },
+  "peerDependencies": {
+    "convex": "^1.43.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -52,6 +52,7 @@ This repository holds what you install around SpecStream: MCP client setup, agen
 | [`integrations/obsidian/`](integrations/obsidian) | Obsidian plugin: ask for a list in a note, approve the price, get a Markdown table with sources |
 | [`integrations/open-webui/`](integrations/open-webui) | Open WebUI tool: quote, approve and read lists from a chat, plus the native MCP route |
 | [`integrations/anythingllm/`](integrations/anythingllm) | AnythingLLM agent skill, plus the MCP route |
+| [`integrations/convex/`](integrations/convex) | Convex component (`@specstream/convex`): live web data as records in your Convex tables, a source for every value |
 | [`plugins/grok/`](plugins/grok) | Grok Build plugin (the hosted MCP server and four skills) |
 | [`plugins/kiro/`](plugins/kiro) | Kiro power (the hosted MCP server and four skills) |
 | [`integrations/vscode/`](integrations/vscode) | VS Code extension: MCP sign-in and `@specstream` chat |
