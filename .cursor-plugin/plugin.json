@@ -1,7 +1,7 @@
 {
   "name": "specstream",
   "version": "1.0.0",
-  "description": "Ask for a list from Cursor and get every match from the live web, repositories, datasets, companies and places, each with its reason and source. You approve the price first.",
+  "description": "Teams and agents get the finished list (companies, people, products and more) from the live web, every row with its source, paid per match. Ask in plain words from Cursor and approve the price before anything runs.",
   "author": {
     "name": "SpecStream",
     "email": "support@specstream.ai"
