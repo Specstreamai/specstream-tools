@@ -148,7 +148,7 @@ Add to `~/.codeium/windsurf/mcp_config.json`:
 
 ### Zed, Cline, and Continue
 
-These start a local server, so use the stdio proxy. It forwards your key from the environment and nothing else.
+Cline also connects to the hosted server directly with OAuth sign-in: `cline mcp install specstream --transport http https://api.specstream.ai/mcp`. Zed and Continue, and Cline if you prefer a key, use the stdio proxy. It forwards your key from the environment and nothing else.
 
 ```sh
 pip install specstream-mcp-stdio
