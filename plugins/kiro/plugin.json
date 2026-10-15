@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "specstream",
+  "version": "1.0.0",
+  "description": "Ask for any list in plain words and get the whole list from the live web: lead lists, company lists, grants, jobs, places. Every row comes with the page behind it, and you pay per matching row at a price you approve first.",
+  "author": {
+    "name": "SpecStream",
+    "url": "https://specstream.ai",
+    "email": "support@specstream.ai"
+  },
+  "homepage": "https://specstream.ai/docs/mcp",
+  "repository": "https://github.com/Specstreamai/specstream-tools",
+  "license": "MIT",
+  "keywords": [
+    "specstream",
+    "specstream lists",
+    "lead list",
+    "company list",
+    "grants list",
+    "job board list",
+    "live web data"
+  ]
+}

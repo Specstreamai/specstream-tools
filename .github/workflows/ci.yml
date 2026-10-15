@@ -79,6 +79,12 @@ jobs:
           npm ci
           npm run check
           npm test
+      - name: Pi package check and test
+        working-directory: integrations/pi
+        run: |
+          npm ci
+          npm run check
+          npm test
       - name: n8n node lint, build and test
         working-directory: integrations/n8n
         run: |

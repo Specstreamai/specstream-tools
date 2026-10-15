@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "specstream": {
+      "type": "http",
+      "url": "https://api.specstream.ai/mcp",
+      "note": "Official SpecStream hosted MCP server. OAuth 2.1 with dynamic client registration: on first connection you sign in to SpecStream in the browser, no API key to paste. Tools: compile and edit_spec (read a request), quote_capacity_work and authorize_capacity_work (price, then approval), get_find, list_find_rows and export_find (read results), send_to_destination (Sheets, Excel, Notion, Airtable, HubSpot, Salesforce). Nothing that costs money runs without your approval of an exact maximum."
+    }
+  }
+}

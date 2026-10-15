@@ -1,0 +1,58 @@
+{
+  "name": "@specstream/pi-package",
+  "version": "0.1.0",
+  "description": "SpecStream for Pi: ask for any list in plain words and get every match from the live web, each row with its source. Adds the SpecStream MCP server and four agent skills.",
+  "type": "module",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "pi-skill",
+    "specstream",
+    "mcp",
+    "lead-lists",
+    "web-data",
+    "web-search",
+    "agent-skills"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Specstreamai/specstream-tools.git",
+    "directory": "integrations/pi"
+  },
+  "homepage": "https://specstream.ai/docs/mcp",
+  "author": {
+    "name": "SpecStream",
+    "email": "support@specstream.ai",
+    "url": "https://specstream.ai"
+  },
+  "files": [
+    "extensions",
+    "skills",
+    "LICENSE",
+    "README.md"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions/specstream.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test test/package.test.ts"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "^1.2.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}
