@@ -9,9 +9,9 @@
 class Specstream < Formula
   desc "Command-line client for SpecStream, the live web data engine"
   homepage "https://specstream.ai"
-  url "https://files.pythonhosted.org/packages/py3/s/specstream-client/specstream_client-1.0.0-py3-none-any.whl", using: :nounzip
-  version "1.0.0"
-  sha256 "a8fe96b8042a32e95977bbde8846796212d595c0349fb8f29a26f4f41a5610fd"
+  url "https://files.pythonhosted.org/packages/py3/s/specstream-client/specstream_client-1.1.0-py3-none-any.whl", using: :nounzip
+  version "1.1.0"
+  sha256 "d06373c29d74c80f0f477b8578ee58d3eece171f0d1c896d603caa892073b348"
   license "MIT"
 
   depends_on "python@3.12"
