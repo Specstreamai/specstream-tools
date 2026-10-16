@@ -264,6 +264,17 @@ The button adds SpecStream to Replit Agent; you sign in when the Project Editor 
 
 Lovable, Gumloop, Relevance AI, Lindy, Manus, Genspark and the rest: add a remote MCP server, paste `https://api.specstream.ai/mcp`, and sign in when asked. If the client only takes headers, use `Authorization: Bearer $SPECSTREAM_API_KEY`.
 
+### Agents that speak A2A
+
+SpecStream is also an [A2A](https://a2a-protocol.org) agent. The Agent Card is at `https://api.specstream.ai/.well-known/agent-card.json` (A2A 1.0, with the 0.3 fields) and the JSON-RPC endpoint is `https://api.specstream.ai/a2a`. Without a key, it reads the request back and prices it:
+
+```bash
+curl -s https://api.specstream.ai/a2a -H 'Content-Type: application/json' -H 'A2A-Version: 1.0' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"SendMessage","params":{"message":{"messageId":"m1","role":"ROLE_USER","parts":[{"text":"Plumbers in Denver with a phone number"}]}}}'
+```
+
+With `Authorization: Bearer $SPECSTREAM_API_KEY` (or an OAuth token), the reply is a task waiting for approval. Reply on the task with a data part `{"confirm_max_cents": N}`, where N is the quoted maximum, to run it; `GetTask` returns the rows, each value with its `source_url`.
+
 ### n8n
 
 Install the community node from **Settings > Community nodes**: `n8n-nodes-specstream`. It reads a request, shows the quote, approves the maximum you type in, and returns the results. Three importable workflows are in [`integrations/n8n/workflows`](integrations/n8n/workflows). An AI agent in n8n can also use the **MCP Client Tool** node with endpoint `https://api.specstream.ai/mcp`, transport HTTP Streamable and a Bearer credential.
