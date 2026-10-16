@@ -3,7 +3,7 @@ import { HttpMethod } from '@activepieces/pieces-common';
 import { specstreamAuth } from '../auth';
 import { specstreamApi } from '../common/client';
 
-type Reading = { status: string; ast_hash: string; canonical_sentence?: string };
+type Reading = { status: string; ast_hash: string; read_back?: string; canonical_sentence?: string };
 type Quote = { quote_id: string; quote_hash: string; maximum_cents: number };
 type Execution = { find_id: string; state?: string; maximum_cents?: number };
 
@@ -80,7 +80,7 @@ export const findListAction = createAction({
     });
     if (reading.status !== 'runnable') {
       throw new Error(
-        `SpecStream needs a clearer request before it can price it. It read: "${reading.canonical_sentence ?? q}". Add the place or what every row must meet.`,
+        `SpecStream needs a clearer request before it can price it. It read: "${reading.read_back ?? reading.canonical_sentence ?? q}". Add the place or what every row must meet.`,
       );
     }
     const quote = await specstreamApi.call<Quote>({
@@ -108,7 +108,7 @@ export const findListAction = createAction({
     return {
       list_id: run.find_id,
       status: run.state ?? 'running',
-      request: reading.canonical_sentence ?? q,
+      request: reading.read_back ?? reading.canonical_sentence ?? q,
       number_of_results: count,
       maximum_price_usd: quote.maximum_cents / 100,
       list_link: specstreamApi.listLink(run.find_id),

@@ -259,7 +259,7 @@ export class Specstream implements INodeType {
         const reading = await call("POST", "/v1/parse", { q, locale: "en-US" });
         if (reading.status !== "runnable") {
           throw fail(
-            `SpecStream needs a clearer request before it can price it. It read: "${String(reading.canonical_sentence || q)}". Add the place or what every row must meet.`,
+            `SpecStream needs a clearer request before it can price it. It read: "${String(reading.read_back || reading.canonical_sentence || q)}". Add the place or what every row must meet.`,
           );
         }
         const quote = await call("POST", "/v1/capacity/quotes", {
@@ -284,7 +284,7 @@ export class Specstream implements INodeType {
           json: {
             list_id: listId,
             status: run.state || run.status || "running",
-            request: reading.canonical_sentence || q,
+            request: reading.read_back || reading.canonical_sentence || q,
             number_of_results: count,
             maximum_price_usd: priceCents / 100,
             list_link: `https://specstream.ai/workspace/collections/${listId}`,

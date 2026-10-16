@@ -46,7 +46,7 @@ export class Backend {
       ok: r.status === "runnable" && !!r.ast_hash,
       status: String(r.status ?? ""),
       astHash: r.ast_hash ?? null,
-      sentence: r.canonical_sentence ?? null,
+      sentence: r.read_back ?? r.canonical_sentence ?? null,
     };
   }
 
