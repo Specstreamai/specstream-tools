@@ -1,0 +1,28 @@
+name: tap-specstream
+namespace: tap_specstream
+label: SpecStream
+description: Live web data lists and records, each value with the page it was read from
+pip_url: tap-specstream
+executable: tap-specstream
+capabilities:
+  - catalog
+  - discover
+  - state
+  - about
+  - stream-maps
+settings:
+  - name: api_key
+    label: API key
+    kind: password
+    sensitive: true
+    description: A SpecStream API key from Agents & API. The tap only reads, so a $0 spending limit is enough.
+  - name: start_date
+    label: Start date
+    kind: date_iso8601
+    description: Read only lists created after this time.
+  - name: api_url
+    label: API URL
+    kind: string
+    value: https://api.specstream.ai
+settings_group_validation:
+  - - api_key

@@ -55,6 +55,7 @@ This repository holds what you install around SpecStream: MCP client setup, agen
 | [`integrations/convex/`](integrations/convex) | Convex component (`@specstream/convex`): live web data as records in your Convex tables, a source for every value |
 | [`integrations/fivetran/`](integrations/fivetran) | Fivetran Connector SDK connector: your lists, records and each value with its source page in your warehouse |
 | [`integrations/airbyte/`](integrations/airbyte) | Airbyte source (manifest-only): your lists and records, each value with its source page |
+| [`integrations/meltano/`](integrations/meltano) | `tap-specstream` on PyPI: Singer tap for Meltano and any Singer target, lists and records with each value's source page |
 | [`integrations/coda/`](integrations/coda) | Coda Pack: sync a list into a table with a source column for every value, price a request, find a list from a button |
 | [`plugins/grok/`](plugins/grok) | Grok Build plugin (the hosted MCP server and four skills) |
 | [`plugins/kiro/`](plugins/kiro) | Kiro power (the hosted MCP server and four skills) |
