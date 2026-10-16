@@ -8,3 +8,4 @@ Each example reads a request and brings back the price before anything runs. Eve
 | [`typescript-sdk`](typescript-sdk) | The same with `@specstream/sdk` |
 | [`openai-agents-sdk`](openai-agents-sdk) | An agent over MCP that quotes and stops for your approval |
 | [`langchain-mcp`](langchain-mcp) | The same with LangChain and `langchain-mcp-adapters` |
+| [`dlt`](dlt) | Load your lists, records and each value's source page into any dlt destination |
