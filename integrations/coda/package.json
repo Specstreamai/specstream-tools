@@ -1,0 +1,19 @@
+{
+  "name": "specstream-coda-pack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SpecStream for Coda: sync your lists and records, each value with the page it came from; price a request; find a list.",
+  "license": "MIT",
+  "scripts": {
+    "build": "coda build pack.ts",
+    "validate": "coda validate pack.ts",
+    "test": "tsc -p tsconfig.json && node --test .test-build/test/records.test.js"
+  },
+  "dependencies": {
+    "@codahq/packs-sdk": "1.18.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "typescript": "5.6.3"
+  }
+}
